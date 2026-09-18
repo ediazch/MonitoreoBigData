@@ -1,0 +1,34 @@
+proyecto:
+  nombre: MonitoreoBigData
+  version: "1.0"
+  descripcion: Proyecto base de analisis y monitoreo de datos
+
+rutas:
+  datos_externos:
+    ods: "C:/Users/ediazch/Documents/Monitoreo de productos/DatosTest/DATA/Data_Income_estimator_V1.ods"
+    csv: "C:/Users/ediazch/Documents/Monitoreo de productos/DatosTest/DATA/Data_pruebas_Income(Adviser)QA 1.csv"
+  raw: "data/raw/dataset_original.csv"
+  processed: "data/processed/dataset_limpio.csv"
+
+# Mapeo: valor columna CSV -> nombre hoja ODS -> descripcion tipo documento
+tipos_documento:
+  "1":  { hoja: "1_CC",               descripcion: "Cedula de Ciudadania" }
+  "3":  { hoja: "3_CE",               descripcion: "Cedula de Extranjeria" }
+  "4":  { hoja: "4_TI",               descripcion: "Tarjeta de Identidad" }
+  "5":  { hoja: "5_PAS",              descripcion: "Pasaporte" }
+  "6":  { hoja: "6_Tar_Seg_So",       descripcion: "Tarjeta Seguro Social" }
+  "9":  { hoja: "9_Registro_Civil",   descripcion: "Registro Civil" }
+  "10": { hoja: "10_car_doplo",       descripcion: "Carnet Diplomatico" }
+  "11": { hoja: "11_Pat_Aut",         descripcion: "Patente de Automotor" }
+  "12": { hoja: "12_PEP",             descripcion: "Permiso Especial de Permanencia" }
+  "13": { hoja: "13_PPT",             descripcion: "Permiso Proteccion Temporal" }
+
+csv:
+  encoding: "utf-8-sig"
+  columnas:
+    tipo_id: 0
+    num_id: 1
+
+analisis:
+  col_tipo_id_ods: 0
+  col_num_id_ods: 1

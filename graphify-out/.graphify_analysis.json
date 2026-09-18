@@ -1,0 +1,256 @@
+{
+  "communities": {
+    "0": [
+      "src_limpieza_limpiar_id",
+      "src_limpieza_rationale_89",
+      "tests_test_limpieza_rationale_37",
+      "tests_test_limpieza_rationale_41",
+      "tests_test_limpieza_rationale_45",
+      "tests_test_limpieza_rationale_49",
+      "tests_test_limpieza_rationale_56",
+      "tests_test_limpieza_testlimpiarid",
+      "tests_test_limpieza_testlimpiarid_test_id_con_comilla_doble",
+      "tests_test_limpieza_testlimpiarid_test_id_con_comilla_simple",
+      "tests_test_limpieza_testlimpiarid_test_id_con_espacios",
+      "tests_test_limpieza_testlimpiarid_test_id_con_guion",
+      "tests_test_limpieza_testlimpiarid_test_id_simple",
+      "tests_test_limpieza_testlimpiarid_test_id_solo_espacios",
+      "tests_test_limpieza_testlimpiarid_test_id_vacio"
+    ],
+    "1": [
+      "os",
+      "pytest",
+      "src_transformacion",
+      "src_transformacion_calcular_estadisticas",
+      "src_transformacion_py_any",
+      "src_transformacion_rationale_1",
+      "src_transformacion_rationale_111",
+      "sys",
+      "tests_test_limpieza",
+      "tests_test_limpieza_rationale_1",
+      "tests_test_limpieza_testcalcularestadisticas",
+      "tests_test_limpieza_testcalcularestadisticas_test_cobertura_completa",
+      "tests_test_limpieza_testcalcularestadisticas_test_estadisticas_basicas",
+      "typing"
+    ],
+    "2": [
+      "src_transformacion_cruzar_datos",
+      "src_transformacion_rationale_41",
+      "tests_test_limpieza_rationale_179",
+      "tests_test_limpieza_testcruzardatos",
+      "tests_test_limpieza_testcruzardatos_setup_method",
+      "tests_test_limpieza_testcruzardatos_test_cobertura_100_pct_cuando_todo_coincide",
+      "tests_test_limpieza_testcruzardatos_test_coincidencias_correctas",
+      "tests_test_limpieza_testcruzardatos_test_datos_vacios",
+      "tests_test_limpieza_testcruzardatos_test_resumen_por_tipo_contiene_tipo_1",
+      "tests_test_limpieza_testcruzardatos_test_solo_en_csv",
+      "tests_test_limpieza_testcruzardatos_test_solo_en_ods"
+    ],
+    "3": [
+      "csv",
+      "src_limpieza",
+      "src_limpieza_extraer_texto_celda",
+      "src_limpieza_leer_ods",
+      "src_limpieza_py_any",
+      "src_limpieza_rationale_1",
+      "src_limpieza_rationale_47",
+      "src_limpieza_rationale_79",
+      "xml_etree_elementtree",
+      "zipfile"
+    ],
+    "4": [
+      "analisis_relacion",
+      "analisis_relacion_imprimir_tabla",
+      "analisis_relacion_main",
+      "analisis_relacion_rationale_1",
+      "analisis_relacion_rationale_51",
+      "analisis_relacion_seccion",
+      "analisis_relacion_titulo",
+      "src_limpieza_leer_csv",
+      "src_limpieza_rationale_26"
+    ],
+    "5": [
+      "src_limpieza_normalizar_filas_ods",
+      "src_limpieza_rationale_125",
+      "tests_test_limpieza_rationale_116",
+      "tests_test_limpieza_rationale_128",
+      "tests_test_limpieza_testnormalizarfilasods",
+      "tests_test_limpieza_testnormalizarfilasods_test_descarta_encabezado_texto",
+      "tests_test_limpieza_testnormalizarfilasods_test_descarta_num_id_no_numerico",
+      "tests_test_limpieza_testnormalizarfilasods_test_hoja_incluida_en_resultado",
+      "tests_test_limpieza_testnormalizarfilasods_test_multiple_hojas"
+    ],
+    "6": [
+      "src_limpieza_normalizar_filas_csv",
+      "src_limpieza_rationale_103",
+      "tests_test_limpieza_rationale_91",
+      "tests_test_limpieza_testnormalizarfilascsv",
+      "tests_test_limpieza_testnormalizarfilascsv_test_fila_incompleta_ignorada",
+      "tests_test_limpieza_testnormalizarfilascsv_test_fila_valida",
+      "tests_test_limpieza_testnormalizarfilascsv_test_lista_vacia",
+      "tests_test_limpieza_testnormalizarfilascsv_test_multiples_tipos"
+    ],
+    "7": [
+      "src_limpieza_eliminar_duplicados",
+      "src_limpieza_rationale_152",
+      "tests_test_limpieza_testeliminarduplicados",
+      "tests_test_limpieza_testeliminarduplicados_test_con_duplicados",
+      "tests_test_limpieza_testeliminarduplicados_test_lista_vacia",
+      "tests_test_limpieza_testeliminarduplicados_test_sin_duplicados"
+    ],
+    "8": [
+      "src_limpieza_limpiar_tipo",
+      "src_limpieza_rationale_98",
+      "tests_test_limpieza_testlimpiartipo",
+      "tests_test_limpieza_testlimpiartipo_test_tipo_con_espacios",
+      "tests_test_limpieza_testlimpiartipo_test_tipo_doble_digito",
+      "tests_test_limpieza_testlimpiartipo_test_tipo_simple"
+    ],
+    "9": [
+      "src_init"
+    ]
+  },
+  "cohesion": {
+    "0": 0.19047619047619047,
+    "1": 0.17582417582417584,
+    "2": 0.2727272727272727,
+    "3": 0.2222222222222222,
+    "4": 0.3055555555555556,
+    "5": 0.3055555555555556,
+    "6": 0.35714285714285715,
+    "7": 0.4666666666666667,
+    "8": 0.4666666666666667,
+    "9": 1.0
+  },
+  "gods": [
+    {
+      "id": "src_limpieza_limpiar_id",
+      "label": "limpiar_id()",
+      "degree": 12
+    },
+    {
+      "id": "src_transformacion_cruzar_datos",
+      "label": "cruzar_datos()",
+      "degree": 11
+    },
+    {
+      "id": "analisis_relacion_main",
+      "label": "main()",
+      "degree": 11
+    },
+    {
+      "id": "src_limpieza_normalizar_filas_ods",
+      "label": "normalizar_filas_ods()",
+      "degree": 10
+    },
+    {
+      "id": "src_limpieza_normalizar_filas_csv",
+      "label": "normalizar_filas_csv()",
+      "degree": 10
+    },
+    {
+      "id": "tests_test_limpieza_testlimpiarid",
+      "label": "TestLimpiarId",
+      "degree": 8
+    },
+    {
+      "id": "tests_test_limpieza_testcruzardatos",
+      "label": "TestCruzarDatos",
+      "degree": 8
+    },
+    {
+      "id": "src_limpieza_limpiar_tipo",
+      "label": "limpiar_tipo()",
+      "degree": 8
+    },
+    {
+      "id": "src_transformacion_calcular_estadisticas",
+      "label": "calcular_estadisticas()",
+      "degree": 7
+    },
+    {
+      "id": "src_limpieza_eliminar_duplicados",
+      "label": "eliminar_duplicados()",
+      "degree": 7
+    }
+  ],
+  "surprises": [
+    {
+      "source": "main()",
+      "target": "calcular_estadisticas()",
+      "source_files": [
+        "analisis_relacion.py",
+        "src/transformacion.py"
+      ],
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "why": "inferred connection - not explicitly stated in source; connects across different repos/directories; bridges separate communities"
+    },
+    {
+      "source": "main()",
+      "target": "cruzar_datos()",
+      "source_files": [
+        "analisis_relacion.py",
+        "src/transformacion.py"
+      ],
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "why": "inferred connection - not explicitly stated in source; connects across different repos/directories; bridges separate communities"
+    },
+    {
+      "source": "main()",
+      "target": "leer_ods()",
+      "source_files": [
+        "analisis_relacion.py",
+        "src/limpieza.py"
+      ],
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "why": "inferred connection - not explicitly stated in source; connects across different repos/directories; bridges separate communities"
+    },
+    {
+      "source": "main()",
+      "target": "eliminar_duplicados()",
+      "source_files": [
+        "analisis_relacion.py",
+        "src/limpieza.py"
+      ],
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "why": "inferred connection - not explicitly stated in source; connects across different repos/directories; bridges separate communities"
+    },
+    {
+      "source": "main()",
+      "target": "normalizar_filas_csv()",
+      "source_files": [
+        "analisis_relacion.py",
+        "src/limpieza.py"
+      ],
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "why": "inferred connection - not explicitly stated in source; connects across different repos/directories; bridges separate communities"
+    }
+  ],
+  "questions": [
+    {
+      "type": "bridge_node",
+      "question": "Why does `limpiar_id()` connect `limpiar_id` to `test_limpieza.py`, `limpieza.py`, `normalizar_filas_ods`, `normalizar_filas_csv`?",
+      "why": "High betweenness centrality (0.208) - this node is a cross-community bridge."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `normalizar_filas_ods()` connect `normalizar_filas_ods` to `limpiar_id`, `test_limpieza.py`, `limpieza.py`, `main`, `limpiar_tipo`?",
+      "why": "High betweenness centrality (0.138) - this node is a cross-community bridge."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `main()` connect `main` to `test_limpieza.py`, `cruzar_datos`, `limpieza.py`, `normalizar_filas_ods`, `normalizar_filas_csv`, `eliminar_duplicados`?",
+      "why": "High betweenness centrality (0.130) - this node is a cross-community bridge."
+    },
+    {
+      "type": "verify_inferred",
+      "question": "Are the 7 inferred relationships involving `main()` (e.g. with `eliminar_duplicados()` and `leer_csv()`) actually correct?",
+      "why": "`main()` has 7 INFERRED edges - model-reasoned connections that need verification."
+    }
+  ]
+}

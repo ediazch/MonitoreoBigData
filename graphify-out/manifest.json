@@ -1,0 +1,44 @@
+{
+  ".claude/settings.json": {
+    "mtime": 1789757033.0691693,
+    "seen": 1789757187.429721,
+    "ast_hash": "3ac995fbf93552a991ecab9b63f776aa",
+    "semantic_hash": "3ac995fbf93552a991ecab9b63f776aa"
+  },
+  ".vscode/settings.json": {
+    "mtime": 1789599888.0972984,
+    "seen": 1789757187.4307237,
+    "ast_hash": "4e8d88920c3328a1f8fdc599870e5df9",
+    "semantic_hash": "4e8d88920c3328a1f8fdc599870e5df9"
+  },
+  "analisis_relacion.py": {
+    "mtime": 1789599690.005614,
+    "seen": 1789757187.4307237,
+    "ast_hash": "8dddb75223903bff66534e12e4c51f29",
+    "semantic_hash": "8dddb75223903bff66534e12e4c51f29"
+  },
+  "src/__init__.py": {
+    "mtime": 1789575179.698666,
+    "seen": 1789757187.4307237,
+    "ast_hash": "ceb2898d319a22ad68c3f180aec7a03e",
+    "semantic_hash": "ceb2898d319a22ad68c3f180aec7a03e"
+  },
+  "src/limpieza.py": {
+    "mtime": 1789599591.5577538,
+    "seen": 1789757187.4307237,
+    "ast_hash": "40ce4d4adf37fe418017811e850951c4",
+    "semantic_hash": "40ce4d4adf37fe418017811e850951c4"
+  },
+  "src/transformacion.py": {
+    "mtime": 1789599613.3789945,
+    "seen": 1789757187.4307237,
+    "ast_hash": "a5d82024183b7b5a752bfd8d56d233ee",
+    "semantic_hash": "a5d82024183b7b5a752bfd8d56d233ee"
+  },
+  "tests/test_limpieza.py": {
+    "mtime": 1789599648.5163195,
+    "seen": 1789757187.4307237,
+    "ast_hash": "3fb43a6639f39828fe506d34a1d715d8",
+    "semantic_hash": "3fb43a6639f39828fe506d34a1d715d8"
+  }
+}
