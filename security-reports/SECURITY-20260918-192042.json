@@ -1,0 +1,716 @@
+{
+  "scope": "proyecto-completo",
+  "fecha": "20260918-192042",
+  "hallazgos": [
+    {
+      "regla_id": "SEC-003",
+      "severidad": "CRITICAL",
+      "nombre": "Eval con input externo",
+      "archivo": "skills\\security.py",
+      "linea": 57,
+      "codigo": "        \"descripcion\": \"eval()/exec() pueden ejecutar codigo arbitrario\",",
+      "descripcion": "eval()/exec() pueden ejecutar codigo arbitrario",
+      "recomendacion": "Evitar eval/exec. Usar ast.literal_eval() para datos simples"
+    },
+    {
+      "regla_id": "SEC-003",
+      "severidad": "CRITICAL",
+      "nombre": "Eval con input externo",
+      "archivo": "skills\\security.py",
+      "linea": 58,
+      "codigo": "        \"recomendacion\": \"Evitar eval/exec. Usar ast.literal_eval() para datos simples\"",
+      "descripcion": "eval()/exec() pueden ejecutar codigo arbitrario",
+      "recomendacion": "Evitar eval/exec. Usar ast.literal_eval() para datos simples"
+    },
+    {
+      "regla_id": "SEC-007",
+      "severidad": "HIGH",
+      "nombre": "Datos sensibles en logs",
+      "archivo": "analisis_relacion.py",
+      "linea": 84,
+      "codigo": "    print(f\"        ODS  -> {len(hojas_ods)} hojas cargadas: {list(hojas_ods.keys())}\")",
+      "descripcion": "Datos sensibles pueden aparecer en logs",
+      "recomendacion": "Nunca loggear credenciales. Usar logging.debug('[REDACTED]')"
+    },
+    {
+      "regla_id": "SEC-007",
+      "severidad": "HIGH",
+      "nombre": "Datos sensibles en logs",
+      "archivo": "memory\\compresor.py",
+      "linea": 262,
+      "codigo": "        print(f\"  Tokens antes   : {tokens_antes}\")",
+      "descripcion": "Datos sensibles pueden aparecer en logs",
+      "recomendacion": "Nunca loggear credenciales. Usar logging.debug('[REDACTED]')"
+    },
+    {
+      "regla_id": "SEC-007",
+      "severidad": "HIGH",
+      "nombre": "Datos sensibles en logs",
+      "archivo": "memory\\compresor.py",
+      "linea": 263,
+      "codigo": "        print(f\"  Tokens despues : {tokens_despues}\")",
+      "descripcion": "Datos sensibles pueden aparecer en logs",
+      "recomendacion": "Nunca loggear credenciales. Usar logging.debug('[REDACTED]')"
+    },
+    {
+      "regla_id": "SEC-007",
+      "severidad": "HIGH",
+      "nombre": "Datos sensibles en logs",
+      "archivo": "memory\\compresor.py",
+      "linea": 338,
+      "codigo": "    print(f\"  Tokens en observaciones raw : {tokens_raw}\")",
+      "descripcion": "Datos sensibles pueden aparecer en logs",
+      "recomendacion": "Nunca loggear credenciales. Usar logging.debug('[REDACTED]')"
+    },
+    {
+      "regla_id": "SEC-007",
+      "severidad": "HIGH",
+      "nombre": "Datos sensibles en logs",
+      "archivo": "memory\\compresor.py",
+      "linea": 339,
+      "codigo": "    print(f\"  Tokens en resumenes         : {tokens_comprimidos}\")",
+      "descripcion": "Datos sensibles pueden aparecer en logs",
+      "recomendacion": "Nunca loggear credenciales. Usar logging.debug('[REDACTED]')"
+    },
+    {
+      "regla_id": "SEC-007",
+      "severidad": "HIGH",
+      "nombre": "Datos sensibles en logs",
+      "archivo": "memory\\compresor.py",
+      "linea": 342,
+      "codigo": "        print(f\"  Ahorro estimado de tokens   : {ahorro}%\")",
+      "descripcion": "Datos sensibles pueden aparecer en logs",
+      "recomendacion": "Nunca loggear credenciales. Usar logging.debug('[REDACTED]')"
+    },
+    {
+      "regla_id": "SEC-007",
+      "severidad": "HIGH",
+      "nombre": "Datos sensibles en logs",
+      "archivo": "memory\\compresor.py",
+      "linea": 346,
+      "codigo": "    print(f\"  Algoritmo fallback          : Reglas inteligentes (frecuencia + keywords)\")",
+      "descripcion": "Datos sensibles pueden aparecer en logs",
+      "recomendacion": "Nunca loggear credenciales. Usar logging.debug('[REDACTED]')"
+    },
+    {
+      "regla_id": "SEC-007",
+      "severidad": "HIGH",
+      "nombre": "Datos sensibles en logs",
+      "archivo": "skills\\headroom.py",
+      "linea": 267,
+      "codigo": "    print(f\"  Tokens antes  : {r['tokens_antes']:,}\")",
+      "descripcion": "Datos sensibles pueden aparecer en logs",
+      "recomendacion": "Nunca loggear credenciales. Usar logging.debug('[REDACTED]')"
+    },
+    {
+      "regla_id": "SEC-007",
+      "severidad": "HIGH",
+      "nombre": "Datos sensibles en logs",
+      "archivo": "skills\\headroom.py",
+      "linea": 268,
+      "codigo": "    print(f\"  Tokens despues: {r['tokens_despues']:,}\")",
+      "descripcion": "Datos sensibles pueden aparecer en logs",
+      "recomendacion": "Nunca loggear credenciales. Usar logging.debug('[REDACTED]')"
+    },
+    {
+      "regla_id": "SEC-007",
+      "severidad": "HIGH",
+      "nombre": "Datos sensibles en logs",
+      "archivo": "skills\\headroom.py",
+      "linea": 270,
+      "codigo": "    print(f\"\\n  ORIGINAL ({r['tokens_antes']} tokens):\")",
+      "descripcion": "Datos sensibles pueden aparecer en logs",
+      "recomendacion": "Nunca loggear credenciales. Usar logging.debug('[REDACTED]')"
+    },
+    {
+      "regla_id": "SEC-007",
+      "severidad": "HIGH",
+      "nombre": "Datos sensibles en logs",
+      "archivo": "skills\\headroom.py",
+      "linea": 272,
+      "codigo": "    print(f\"\\n  COMPRIMIDO ({r['tokens_despues']} tokens):\")",
+      "descripcion": "Datos sensibles pueden aparecer en logs",
+      "recomendacion": "Nunca loggear credenciales. Usar logging.debug('[REDACTED]')"
+    },
+    {
+      "regla_id": "SEC-008",
+      "severidad": "MEDIUM",
+      "nombre": "Excepcion generica capturada",
+      "archivo": "memory\\compresor.py",
+      "linea": 94,
+      "codigo": "        except Exception:",
+      "descripcion": "Capturar Exception generica oculta errores de seguridad",
+      "recomendacion": "Capturar excepciones especificas: except (ValueError, KeyError) as e"
+    },
+    {
+      "regla_id": "SEC-008",
+      "severidad": "MEDIUM",
+      "nombre": "Excepcion generica capturada",
+      "archivo": "memory\\compresor.py",
+      "linea": 105,
+      "codigo": "    except Exception as e:",
+      "descripcion": "Capturar Exception generica oculta errores de seguridad",
+      "recomendacion": "Capturar excepciones especificas: except (ValueError, KeyError) as e"
+    },
+    {
+      "regla_id": "SEC-008",
+      "severidad": "MEDIUM",
+      "nombre": "Excepcion generica capturada",
+      "archivo": "memory\\compresor.py",
+      "linea": 182,
+      "codigo": "    except Exception:",
+      "descripcion": "Capturar Exception generica oculta errores de seguridad",
+      "recomendacion": "Capturar excepciones especificas: except (ValueError, KeyError) as e"
+    },
+    {
+      "regla_id": "SEC-008",
+      "severidad": "MEDIUM",
+      "nombre": "Excepcion generica capturada",
+      "archivo": "memory\\watcher.py",
+      "linea": 125,
+      "codigo": "        except Exception as e:",
+      "descripcion": "Capturar Exception generica oculta errores de seguridad",
+      "recomendacion": "Capturar excepciones especificas: except (ValueError, KeyError) as e"
+    },
+    {
+      "regla_id": "SEC-008",
+      "severidad": "MEDIUM",
+      "nombre": "Excepcion generica capturada",
+      "archivo": "memory\\watcher.py",
+      "linea": 162,
+      "codigo": "            except Exception as e:",
+      "descripcion": "Capturar Exception generica oculta errores de seguridad",
+      "recomendacion": "Capturar excepciones especificas: except (ValueError, KeyError) as e"
+    },
+    {
+      "regla_id": "SEC-008",
+      "severidad": "MEDIUM",
+      "nombre": "Excepcion generica capturada",
+      "archivo": "memory\\watcher.py",
+      "linea": 197,
+      "codigo": "    except Exception:",
+      "descripcion": "Capturar Exception generica oculta errores de seguridad",
+      "recomendacion": "Capturar excepciones especificas: except (ValueError, KeyError) as e"
+    },
+    {
+      "regla_id": "SEC-008",
+      "severidad": "MEDIUM",
+      "nombre": "Excepcion generica capturada",
+      "archivo": "memory\\watcher.py",
+      "linea": 210,
+      "codigo": "    except Exception:",
+      "descripcion": "Capturar Exception generica oculta errores de seguridad",
+      "recomendacion": "Capturar excepciones especificas: except (ValueError, KeyError) as e"
+    },
+    {
+      "regla_id": "SEC-008",
+      "severidad": "MEDIUM",
+      "nombre": "Excepcion generica capturada",
+      "archivo": "memory\\watcher.py",
+      "linea": 224,
+      "codigo": "    except Exception:",
+      "descripcion": "Capturar Exception generica oculta errores de seguridad",
+      "recomendacion": "Capturar excepciones especificas: except (ValueError, KeyError) as e"
+    },
+    {
+      "regla_id": "SEC-008",
+      "severidad": "MEDIUM",
+      "nombre": "Excepcion generica capturada",
+      "archivo": "memory\\watcher.py",
+      "linea": 263,
+      "codigo": "    except Exception:",
+      "descripcion": "Capturar Exception generica oculta errores de seguridad",
+      "recomendacion": "Capturar excepciones especificas: except (ValueError, KeyError) as e"
+    },
+    {
+      "regla_id": "SEC-008",
+      "severidad": "MEDIUM",
+      "nombre": "Excepcion generica capturada",
+      "archivo": "skills\\headroom.py",
+      "linea": 52,
+      "codigo": "    except Exception:",
+      "descripcion": "Capturar Exception generica oculta errores de seguridad",
+      "recomendacion": "Capturar excepciones especificas: except (ValueError, KeyError) as e"
+    },
+    {
+      "regla_id": "SEC-008",
+      "severidad": "MEDIUM",
+      "nombre": "Excepcion generica capturada",
+      "archivo": "skills\\headroom.py",
+      "linea": 224,
+      "codigo": "    except Exception:",
+      "descripcion": "Capturar Exception generica oculta errores de seguridad",
+      "recomendacion": "Capturar excepciones especificas: except (ValueError, KeyError) as e"
+    },
+    {
+      "regla_id": "SEC-008",
+      "severidad": "MEDIUM",
+      "nombre": "Excepcion generica capturada",
+      "archivo": "skills\\ralph.py",
+      "linea": 71,
+      "codigo": "    except Exception as e:",
+      "descripcion": "Capturar Exception generica oculta errores de seguridad",
+      "recomendacion": "Capturar excepciones especificas: except (ValueError, KeyError) as e"
+    },
+    {
+      "regla_id": "SEC-011",
+      "severidad": "MEDIUM",
+      "nombre": "Debug mode en produccion",
+      "archivo": "skills\\security.py",
+      "linea": 115,
+      "codigo": "        \"descripcion\": \"debug=True expone informacion sensible del stack\",",
+      "descripcion": "debug=True expone informacion sensible del stack",
+      "recomendacion": "Usar variables de entorno para controlar debug mode"
+    },
+    {
+      "regla_id": "SEC-008",
+      "severidad": "MEDIUM",
+      "nombre": "Excepcion generica capturada",
+      "archivo": "skills\\security.py",
+      "linea": 154,
+      "codigo": "    except Exception:",
+      "descripcion": "Capturar Exception generica oculta errores de seguridad",
+      "recomendacion": "Capturar excepciones especificas: except (ValueError, KeyError) as e"
+    },
+    {
+      "regla_id": "SEC-008",
+      "severidad": "MEDIUM",
+      "nombre": "Excepcion generica capturada",
+      "archivo": "skills\\security.py",
+      "linea": 301,
+      "codigo": "    except Exception as e:",
+      "descripcion": "Capturar Exception generica oculta errores de seguridad",
+      "recomendacion": "Capturar excepciones especificas: except (ValueError, KeyError) as e"
+    },
+    {
+      "regla_id": "SEC-008",
+      "severidad": "MEDIUM",
+      "nombre": "Excepcion generica capturada",
+      "archivo": "skills\\task_observer.py",
+      "linea": 299,
+      "codigo": "            except Exception:",
+      "descripcion": "Capturar Exception generica oculta errores de seguridad",
+      "recomendacion": "Capturar excepciones especificas: except (ValueError, KeyError) as e"
+    },
+    {
+      "regla_id": "SEC-013",
+      "severidad": "LOW",
+      "nombre": "Uso de assert para validacion",
+      "archivo": "tests\\test_limpieza.py",
+      "linea": 38,
+      "codigo": "        assert limpiar_id(\"1069729185\") == \"1069729185\"",
+      "descripcion": "assert se desactiva con python -O, no usar para validacion de seguridad",
+      "recomendacion": "Usar if/raise ValueError en lugar de assert para validaciones criticas"
+    },
+    {
+      "regla_id": "SEC-013",
+      "severidad": "LOW",
+      "nombre": "Uso de assert para validacion",
+      "archivo": "tests\\test_limpieza.py",
+      "linea": 42,
+      "codigo": "        assert limpiar_id(\"'1069729185'\") == \"1069729185\"",
+      "descripcion": "assert se desactiva con python -O, no usar para validacion de seguridad",
+      "recomendacion": "Usar if/raise ValueError en lugar de assert para validaciones criticas"
+    },
+    {
+      "regla_id": "SEC-013",
+      "severidad": "LOW",
+      "nombre": "Uso de assert para validacion",
+      "archivo": "tests\\test_limpieza.py",
+      "linea": 46,
+      "codigo": "        assert limpiar_id(\"  1069729185  \") == \"1069729185\"",
+      "descripcion": "assert se desactiva con python -O, no usar para validacion de seguridad",
+      "recomendacion": "Usar if/raise ValueError en lugar de assert para validaciones criticas"
+    },
+    {
+      "regla_id": "SEC-013",
+      "severidad": "LOW",
+      "nombre": "Uso de assert para validacion",
+      "archivo": "tests\\test_limpieza.py",
+      "linea": 50,
+      "codigo": "        assert limpiar_id(\"10697-29185\") == \"1069729185\"",
+      "descripcion": "assert se desactiva con python -O, no usar para validacion de seguridad",
+      "recomendacion": "Usar if/raise ValueError en lugar de assert para validaciones criticas"
+    },
+    {
+      "regla_id": "SEC-013",
+      "severidad": "LOW",
+      "nombre": "Uso de assert para validacion",
+      "archivo": "tests\\test_limpieza.py",
+      "linea": 53,
+      "codigo": "        assert limpiar_id('\"1069729185\"') == \"1069729185\"",
+      "descripcion": "assert se desactiva con python -O, no usar para validacion de seguridad",
+      "recomendacion": "Usar if/raise ValueError en lugar de assert para validaciones criticas"
+    },
+    {
+      "regla_id": "SEC-013",
+      "severidad": "LOW",
+      "nombre": "Uso de assert para validacion",
+      "archivo": "tests\\test_limpieza.py",
+      "linea": 57,
+      "codigo": "        assert limpiar_id(\"\") == \"\"",
+      "descripcion": "assert se desactiva con python -O, no usar para validacion de seguridad",
+      "recomendacion": "Usar if/raise ValueError en lugar de assert para validaciones criticas"
+    },
+    {
+      "regla_id": "SEC-013",
+      "severidad": "LOW",
+      "nombre": "Uso de assert para validacion",
+      "archivo": "tests\\test_limpieza.py",
+      "linea": 60,
+      "codigo": "        assert limpiar_id(\"   \") == \"\"",
+      "descripcion": "assert se desactiva con python -O, no usar para validacion de seguridad",
+      "recomendacion": "Usar if/raise ValueError en lugar de assert para validaciones criticas"
+    },
+    {
+      "regla_id": "SEC-013",
+      "severidad": "LOW",
+      "nombre": "Uso de assert para validacion",
+      "archivo": "tests\\test_limpieza.py",
+      "linea": 69,
+      "codigo": "        assert limpiar_tipo(\"1\") == \"1\"",
+      "descripcion": "assert se desactiva con python -O, no usar para validacion de seguridad",
+      "recomendacion": "Usar if/raise ValueError en lugar de assert para validaciones criticas"
+    },
+    {
+      "regla_id": "SEC-013",
+      "severidad": "LOW",
+      "nombre": "Uso de assert para validacion",
+      "archivo": "tests\\test_limpieza.py",
+      "linea": 72,
+      "codigo": "        assert limpiar_tipo(\"  12  \") == \"12\"",
+      "descripcion": "assert se desactiva con python -O, no usar para validacion de seguridad",
+      "recomendacion": "Usar if/raise ValueError en lugar de assert para validaciones criticas"
+    },
+    {
+      "regla_id": "SEC-013",
+      "severidad": "LOW",
+      "nombre": "Uso de assert para validacion",
+      "archivo": "tests\\test_limpieza.py",
+      "linea": 75,
+      "codigo": "        assert limpiar_tipo(\"13\") == \"13\"",
+      "descripcion": "assert se desactiva con python -O, no usar para validacion de seguridad",
+      "recomendacion": "Usar if/raise ValueError en lugar de assert para validaciones criticas"
+    },
+    {
+      "regla_id": "SEC-013",
+      "severidad": "LOW",
+      "nombre": "Uso de assert para validacion",
+      "archivo": "tests\\test_limpieza.py",
+      "linea": 86,
+      "codigo": "        assert len(resultado) == 1",
+      "descripcion": "assert se desactiva con python -O, no usar para validacion de seguridad",
+      "recomendacion": "Usar if/raise ValueError en lugar de assert para validaciones criticas"
+    },
+    {
+      "regla_id": "SEC-013",
+      "severidad": "LOW",
+      "nombre": "Uso de assert para validacion",
+      "archivo": "tests\\test_limpieza.py",
+      "linea": 87,
+      "codigo": "        assert resultado[0][\"tipo_id\"] == \"1\"",
+      "descripcion": "assert se desactiva con python -O, no usar para validacion de seguridad",
+      "recomendacion": "Usar if/raise ValueError en lugar de assert para validaciones criticas"
+    },
+    {
+      "regla_id": "SEC-013",
+      "severidad": "LOW",
+      "nombre": "Uso de assert para validacion",
+      "archivo": "tests\\test_limpieza.py",
+      "linea": 88,
+      "codigo": "        assert resultado[0][\"num_id\"] == \"1069729185\"",
+      "descripcion": "assert se desactiva con python -O, no usar para validacion de seguridad",
+      "recomendacion": "Usar if/raise ValueError en lugar de assert para validaciones criticas"
+    },
+    {
+      "regla_id": "SEC-013",
+      "severidad": "LOW",
+      "nombre": "Uso de assert para validacion",
+      "archivo": "tests\\test_limpieza.py",
+      "linea": 94,
+      "codigo": "        assert len(resultado) == 1",
+      "descripcion": "assert se desactiva con python -O, no usar para validacion de seguridad",
+      "recomendacion": "Usar if/raise ValueError en lugar de assert para validaciones criticas"
+    },
+    {
+      "regla_id": "SEC-013",
+      "severidad": "LOW",
+      "nombre": "Uso de assert para validacion",
+      "archivo": "tests\\test_limpieza.py",
+      "linea": 95,
+      "codigo": "        assert resultado[0][\"tipo_id\"] == \"4\"",
+      "descripcion": "assert se desactiva con python -O, no usar para validacion de seguridad",
+      "recomendacion": "Usar if/raise ValueError en lugar de assert para validaciones criticas"
+    },
+    {
+      "regla_id": "SEC-013",
+      "severidad": "LOW",
+      "nombre": "Uso de assert para validacion",
+      "archivo": "tests\\test_limpieza.py",
+      "linea": 100,
+      "codigo": "        assert len(resultado) == 3",
+      "descripcion": "assert se desactiva con python -O, no usar para validacion de seguridad",
+      "recomendacion": "Usar if/raise ValueError en lugar de assert para validaciones criticas"
+    },
+    {
+      "regla_id": "SEC-013",
+      "severidad": "LOW",
+      "nombre": "Uso de assert para validacion",
+      "archivo": "tests\\test_limpieza.py",
+      "linea": 102,
+      "codigo": "        assert \"1\" in tipos",
+      "descripcion": "assert se desactiva con python -O, no usar para validacion de seguridad",
+      "recomendacion": "Usar if/raise ValueError en lugar de assert para validaciones criticas"
+    },
+    {
+      "regla_id": "SEC-013",
+      "severidad": "LOW",
+      "nombre": "Uso de assert para validacion",
+      "archivo": "tests\\test_limpieza.py",
+      "linea": 103,
+      "codigo": "        assert \"13\" in tipos",
+      "descripcion": "assert se desactiva con python -O, no usar para validacion de seguridad",
+      "recomendacion": "Usar if/raise ValueError en lugar de assert para validaciones criticas"
+    },
+    {
+      "regla_id": "SEC-013",
+      "severidad": "LOW",
+      "nombre": "Uso de assert para validacion",
+      "archivo": "tests\\test_limpieza.py",
+      "linea": 106,
+      "codigo": "        assert normalizar_filas_csv([]) == []",
+      "descripcion": "assert se desactiva con python -O, no usar para validacion de seguridad",
+      "recomendacion": "Usar if/raise ValueError en lugar de assert para validaciones criticas"
+    },
+    {
+      "regla_id": "SEC-013",
+      "severidad": "LOW",
+      "nombre": "Uso de assert para validacion",
+      "archivo": "tests\\test_limpieza.py",
+      "linea": 124,
+      "codigo": "        assert len(resultado) == 1",
+      "descripcion": "assert se desactiva con python -O, no usar para validacion de seguridad",
+      "recomendacion": "Usar if/raise ValueError en lugar de assert para validaciones criticas"
+    },
+    {
+      "regla_id": "SEC-013",
+      "severidad": "LOW",
+      "nombre": "Uso de assert para validacion",
+      "archivo": "tests\\test_limpieza.py",
+      "linea": 125,
+      "codigo": "        assert resultado[0][\"num_id\"] == \"2000000023\"",
+      "descripcion": "assert se desactiva con python -O, no usar para validacion de seguridad",
+      "recomendacion": "Usar if/raise ValueError en lugar de assert para validaciones criticas"
+    },
+    {
+      "regla_id": "SEC-013",
+      "severidad": "LOW",
+      "nombre": "Uso de assert para validacion",
+      "archivo": "tests\\test_limpieza.py",
+      "linea": 131,
+      "codigo": "        assert len(resultado) == 1",
+      "descripcion": "assert se desactiva con python -O, no usar para validacion de seguridad",
+      "recomendacion": "Usar if/raise ValueError en lugar de assert para validaciones criticas"
+    },
+    {
+      "regla_id": "SEC-013",
+      "severidad": "LOW",
+      "nombre": "Uso de assert para validacion",
+      "archivo": "tests\\test_limpieza.py",
+      "linea": 136,
+      "codigo": "        assert resultado[0][\"hoja\"] == \"4_TI\"",
+      "descripcion": "assert se desactiva con python -O, no usar para validacion de seguridad",
+      "recomendacion": "Usar if/raise ValueError en lugar de assert para validaciones criticas"
+    },
+    {
+      "regla_id": "SEC-013",
+      "severidad": "LOW",
+      "nombre": "Uso de assert para validacion",
+      "archivo": "tests\\test_limpieza.py",
+      "linea": 144,
+      "codigo": "        assert len(resultado) == 3",
+      "descripcion": "assert se desactiva con python -O, no usar para validacion de seguridad",
+      "recomendacion": "Usar if/raise ValueError en lugar de assert para validaciones criticas"
+    },
+    {
+      "regla_id": "SEC-013",
+      "severidad": "LOW",
+      "nombre": "Uso de assert para validacion",
+      "archivo": "tests\\test_limpieza.py",
+      "linea": 157,
+      "codigo": "        assert len(eliminar_duplicados(registros)) == 2",
+      "descripcion": "assert se desactiva con python -O, no usar para validacion de seguridad",
+      "recomendacion": "Usar if/raise ValueError en lugar de assert para validaciones criticas"
+    },
+    {
+      "regla_id": "SEC-013",
+      "severidad": "LOW",
+      "nombre": "Uso de assert para validacion",
+      "archivo": "tests\\test_limpieza.py",
+      "linea": 166,
+      "codigo": "        assert len(resultado) == 2",
+      "descripcion": "assert se desactiva con python -O, no usar para validacion de seguridad",
+      "recomendacion": "Usar if/raise ValueError en lugar de assert para validaciones criticas"
+    },
+    {
+      "regla_id": "SEC-013",
+      "severidad": "LOW",
+      "nombre": "Uso de assert para validacion",
+      "archivo": "tests\\test_limpieza.py",
+      "linea": 169,
+      "codigo": "        assert eliminar_duplicados([]) == []",
+      "descripcion": "assert se desactiva con python -O, no usar para validacion de seguridad",
+      "recomendacion": "Usar if/raise ValueError en lugar de assert para validaciones criticas"
+    },
+    {
+      "regla_id": "SEC-013",
+      "severidad": "LOW",
+      "nombre": "Uso de assert para validacion",
+      "archivo": "tests\\test_limpieza.py",
+      "linea": 193,
+      "codigo": "        assert len(resultado[\"coincidencias\"]) == 2",
+      "descripcion": "assert se desactiva con python -O, no usar para validacion de seguridad",
+      "recomendacion": "Usar if/raise ValueError en lugar de assert para validaciones criticas"
+    },
+    {
+      "regla_id": "SEC-013",
+      "severidad": "LOW",
+      "nombre": "Uso de assert para validacion",
+      "archivo": "tests\\test_limpieza.py",
+      "linea": 197,
+      "codigo": "        assert len(resultado[\"solo_en_csv\"]) == 1",
+      "descripcion": "assert se desactiva con python -O, no usar para validacion de seguridad",
+      "recomendacion": "Usar if/raise ValueError en lugar de assert para validaciones criticas"
+    },
+    {
+      "regla_id": "SEC-013",
+      "severidad": "LOW",
+      "nombre": "Uso de assert para validacion",
+      "archivo": "tests\\test_limpieza.py",
+      "linea": 198,
+      "codigo": "        assert resultado[\"solo_en_csv\"][0][\"num_id\"] == \"999\"",
+      "descripcion": "assert se desactiva con python -O, no usar para validacion de seguridad",
+      "recomendacion": "Usar if/raise ValueError en lugar de assert para validaciones criticas"
+    },
+    {
+      "regla_id": "SEC-013",
+      "severidad": "LOW",
+      "nombre": "Uso de assert para validacion",
+      "archivo": "tests\\test_limpieza.py",
+      "linea": 202,
+      "codigo": "        assert len(resultado[\"solo_en_ods\"]) == 1",
+      "descripcion": "assert se desactiva con python -O, no usar para validacion de seguridad",
+      "recomendacion": "Usar if/raise ValueError en lugar de assert para validaciones criticas"
+    },
+    {
+      "regla_id": "SEC-013",
+      "severidad": "LOW",
+      "nombre": "Uso de assert para validacion",
+      "archivo": "tests\\test_limpieza.py",
+      "linea": 203,
+      "codigo": "        assert resultado[\"solo_en_ods\"][0][\"num_id\"] == \"888\"",
+      "descripcion": "assert se desactiva con python -O, no usar para validacion de seguridad",
+      "recomendacion": "Usar if/raise ValueError en lugar de assert para validaciones criticas"
+    },
+    {
+      "regla_id": "SEC-013",
+      "severidad": "LOW",
+      "nombre": "Uso de assert para validacion",
+      "archivo": "tests\\test_limpieza.py",
+      "linea": 207,
+      "codigo": "        assert \"1\" in resultado[\"resumen_por_tipo\"]",
+      "descripcion": "assert se desactiva con python -O, no usar para validacion de seguridad",
+      "recomendacion": "Usar if/raise ValueError en lugar de assert para validaciones criticas"
+    },
+    {
+      "regla_id": "SEC-013",
+      "severidad": "LOW",
+      "nombre": "Uso de assert para validacion",
+      "archivo": "tests\\test_limpieza.py",
+      "linea": 208,
+      "codigo": "        assert resultado[\"resumen_por_tipo\"][\"1\"][\"coincidencias\"] == 2",
+      "descripcion": "assert se desactiva con python -O, no usar para validacion de seguridad",
+      "recomendacion": "Usar if/raise ValueError en lugar de assert para validaciones criticas"
+    },
+    {
+      "regla_id": "SEC-013",
+      "severidad": "LOW",
+      "nombre": "Uso de assert para validacion",
+      "archivo": "tests\\test_limpieza.py",
+      "linea": 214,
+      "codigo": "        assert resultado[\"resumen_por_tipo\"][\"1\"][\"cobertura_pct\"] == 100.0",
+      "descripcion": "assert se desactiva con python -O, no usar para validacion de seguridad",
+      "recomendacion": "Usar if/raise ValueError en lugar de assert para validaciones criticas"
+    },
+    {
+      "regla_id": "SEC-013",
+      "severidad": "LOW",
+      "nombre": "Uso de assert para validacion",
+      "archivo": "tests\\test_limpieza.py",
+      "linea": 218,
+      "codigo": "        assert resultado[\"coincidencias\"] == []",
+      "descripcion": "assert se desactiva con python -O, no usar para validacion de seguridad",
+      "recomendacion": "Usar if/raise ValueError en lugar de assert para validaciones criticas"
+    },
+    {
+      "regla_id": "SEC-013",
+      "severidad": "LOW",
+      "nombre": "Uso de assert para validacion",
+      "archivo": "tests\\test_limpieza.py",
+      "linea": 219,
+      "codigo": "        assert resultado[\"solo_en_csv\"] == []",
+      "descripcion": "assert se desactiva con python -O, no usar para validacion de seguridad",
+      "recomendacion": "Usar if/raise ValueError en lugar de assert para validaciones criticas"
+    },
+    {
+      "regla_id": "SEC-013",
+      "severidad": "LOW",
+      "nombre": "Uso de assert para validacion",
+      "archivo": "tests\\test_limpieza.py",
+      "linea": 220,
+      "codigo": "        assert resultado[\"solo_en_ods\"] == []",
+      "descripcion": "assert se desactiva con python -O, no usar para validacion de seguridad",
+      "recomendacion": "Usar if/raise ValueError en lugar de assert para validaciones criticas"
+    },
+    {
+      "regla_id": "SEC-013",
+      "severidad": "LOW",
+      "nombre": "Uso de assert para validacion",
+      "archivo": "tests\\test_limpieza.py",
+      "linea": 236,
+      "codigo": "        assert stats[\"total_registros_csv\"] == 2",
+      "descripcion": "assert se desactiva con python -O, no usar para validacion de seguridad",
+      "recomendacion": "Usar if/raise ValueError en lugar de assert para validaciones criticas"
+    },
+    {
+      "regla_id": "SEC-013",
+      "severidad": "LOW",
+      "nombre": "Uso de assert para validacion",
+      "archivo": "tests\\test_limpieza.py",
+      "linea": 237,
+      "codigo": "        assert stats[\"coincidencias\"] == 1",
+      "descripcion": "assert se desactiva con python -O, no usar para validacion de seguridad",
+      "recomendacion": "Usar if/raise ValueError en lugar de assert para validaciones criticas"
+    },
+    {
+      "regla_id": "SEC-013",
+      "severidad": "LOW",
+      "nombre": "Uso de assert para validacion",
+      "archivo": "tests\\test_limpieza.py",
+      "linea": 238,
+      "codigo": "        assert stats[\"cobertura_csv_pct\"] == 50.0",
+      "descripcion": "assert se desactiva con python -O, no usar para validacion de seguridad",
+      "recomendacion": "Usar if/raise ValueError en lugar de assert para validaciones criticas"
+    },
+    {
+      "regla_id": "SEC-013",
+      "severidad": "LOW",
+      "nombre": "Uso de assert para validacion",
+      "archivo": "tests\\test_limpieza.py",
+      "linea": 248,
+      "codigo": "        assert stats[\"cobertura_csv_pct\"] == 100.0",
+      "descripcion": "assert se desactiva con python -O, no usar para validacion de seguridad",
+      "recomendacion": "Usar if/raise ValueError en lugar de assert para validaciones criticas"
+    }
+  ]
+}

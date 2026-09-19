@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+*.pyo
+memory/memory.db
+memory/memory_export.json
+memory/.sesion_activa
+.pytest_cache/
+graphify-out/cache/
+graphify-out/graph.html
+graphify-out/graph.json
+graphify-out/.graphify_analysis.json
+graphify-out/.graphify_labels.json*

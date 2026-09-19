@@ -31,6 +31,9 @@ except ImportError:
 sys.path.insert(0, os.path.dirname(__file__))
 from aura_mem import conectar, _sesion_activa, cmd_log
 from session_log import cmd_start, cmd_end
+from compresor import comprimir_automatico
+
+SKILLS_DIR = os.path.join(os.path.dirname(__file__), "..", "skills")
 
 # ---------------------------------------------------------------------------
 # Configuracion
@@ -124,10 +127,17 @@ class AuraMemHandler(FileSystemEventHandler):
 
         # Actualizar ultima actividad
         with _ultima_actividad_lock:
-            global _ultima_actividad
             _ultima_actividad = datetime.now()
 
         print(f"[aura-mem] {datetime.now().strftime('%H:%M:%S')} | {tipo.upper():<12} | {ruta_rel}")
+
+        # Auto-audit impeccable cuando cambia un HTML
+        if ext == ".html":
+            threading.Thread(
+                target=_auto_impeccable_audit,
+                args=(ruta_rel,),
+                daemon=True
+            ).start()
 
 
 # ---------------------------------------------------------------------------
@@ -153,7 +163,6 @@ def _monitor_inactividad():
                 print(f"[aura-mem] Error en ciclo de sesion: {e}")
             # Resetear timer
             with _ultima_actividad_lock:
-                global _ultima_actividad
                 _ultima_actividad = datetime.now()
 
 
@@ -175,17 +184,33 @@ def _tipo_por_extension(ext: str, ruta: str) -> str:
     return "nota"
 
 
+def _auto_impeccable_audit(ruta_rel: str) -> None:
+    """Ejecuta impeccable audit automaticamente cuando cambia un HTML."""
+    try:
+        impeccable = os.path.join(SKILLS_DIR, "impeccable.py")
+        if os.path.exists(impeccable):
+            print(f"[impeccable] Auto-audit: {ruta_rel}")
+            # SEC-006 fix: shell=False, argumentos como lista
+            subprocess.run(
+                [sys.executable, impeccable, "audit", ruta_rel],
+                cwd=PROYECTO_ROOT, capture_output=True, shell=False
+            )
+    except (OSError, ValueError) as e:
+        print(f"[impeccable] Error en audit: {e}")
+
+
 def _registrar_contexto_git() -> None:
     """Registra el ultimo commit de git al iniciar el watcher."""
     try:
+        # SEC-006 fix: shell=False siempre, argumentos como lista
         result = subprocess.run(
             ["git", "log", "-1", "--pretty=format:%h %s"],
-            capture_output=True, text=True, cwd=PROYECTO_ROOT
+            capture_output=True, text=True, cwd=PROYECTO_ROOT, shell=False
         )
         if result.returncode == 0 and result.stdout.strip():
             cmd_log(f"[AUTO] Ultimo commit al iniciar: {result.stdout.strip()}", "nota")
-    except Exception:
-        pass
+    except (OSError, FileNotFoundError):
+        pass  # git no disponible
 
 
 def _registrar_rama_activa() -> None:
@@ -193,13 +218,13 @@ def _registrar_rama_activa() -> None:
     try:
         result = subprocess.run(
             ["git", "branch", "--show-current"],
-            capture_output=True, text=True, cwd=PROYECTO_ROOT
+            capture_output=True, text=True, cwd=PROYECTO_ROOT, shell=False
         )
         if result.returncode == 0 and result.stdout.strip():
             rama = result.stdout.strip()
             cmd_log(f"[AUTO] Rama activa: {rama}", "nota")
-    except Exception:
-        pass
+    except (OSError, FileNotFoundError):
+        pass  # git no disponible
 
 
 # ---------------------------------------------------------------------------
@@ -219,6 +244,27 @@ def main():
     # Registrar contexto git inicial
     _registrar_contexto_git()
     _registrar_rama_activa()
+
+    # Comprimir sesiones anteriores pendientes al iniciar
+    print("[compresor] Verificando sesiones anteriores para comprimir...")
+    n = comprimir_automatico(verbose=False)
+    if n > 0:
+        print(f"[compresor] {n} sesion(es) anteriores comprimidas automaticamente.")
+
+    # Ejecutar task-observer patrones al iniciar sesion
+    print("[task-observer] Analizando patrones de sesiones anteriores...")
+    try:
+        task_obs = os.path.join(SKILLS_DIR, "task_observer.py")
+        if os.path.exists(task_obs):
+            # SEC-006 fix: shell=False
+            result = subprocess.run(
+                [sys.executable, task_obs, "patrones"],
+                cwd=PROYECTO_ROOT, capture_output=True, text=True, shell=False
+            )
+            if result.stdout:
+                print(result.stdout)
+    except (OSError, ValueError) as e:
+        print(f"[task-observer] No disponible: {e}")
 
     # Iniciar monitor de inactividad en background
     t = threading.Thread(target=_monitor_inactividad, daemon=True)

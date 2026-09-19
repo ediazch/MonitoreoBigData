@@ -11,6 +11,7 @@ Uso:
 
 import sys
 import os
+import yaml
 
 # Agregar src al path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src"))
@@ -25,10 +26,42 @@ from limpieza import (
 from transformacion import cruzar_datos, calcular_estadisticas, TIPOS_DOCUMENTO
 
 # ---------------------------------------------------------------------------
-# Configuracion de rutas
+# Configuracion de rutas — leidas desde configuracion.yaml (SEC-001 fix)
+# Las rutas absolutas se definen en config, no en el codigo
 # ---------------------------------------------------------------------------
-RUTA_ODS = r"C:\Users\ediazch\Documents\Monitoreo de productos\DatosTest\DATA\Data_Income_estimator_V1.ods"
-RUTA_CSV = r"C:\Users\ediazch\Documents\Monitoreo de productos\DatosTest\DATA\Data_pruebas_Income(Adviser)QA 1.csv"
+_CONFIG_PATH = os.path.join(os.path.dirname(__file__), "config", "configuracion.yaml")
+
+def _cargar_rutas() -> tuple[str, str]:
+    """Lee las rutas desde configuracion.yaml. Fallback a variables de entorno."""
+    # Prioridad 1: variables de entorno (mas seguro para CI/CD)
+    ruta_ods = os.environ.get("MONITOREO_RUTA_ODS")
+    ruta_csv = os.environ.get("MONITOREO_RUTA_CSV")
+    if ruta_ods and ruta_csv:
+        return ruta_ods, ruta_csv
+    # Prioridad 2: configuracion.yaml
+    try:
+        with open(_CONFIG_PATH, encoding="utf-8") as f:
+            cfg = yaml.safe_load(f)
+        rutas = cfg.get("rutas", {}).get("datos_externos", {})
+        return rutas.get("ods", ""), rutas.get("csv", "")
+    except (FileNotFoundError, KeyError, TypeError) as e:
+        raise RuntimeError(
+            f"No se encontraron rutas en config/configuracion.yaml ni en variables de entorno.\n"
+            f"Define MONITOREO_RUTA_ODS y MONITOREO_RUTA_CSV o configura rutas.datos_externos en el YAML.\n"
+            f"Error: {e}"
+        )
+
+RUTA_ODS, RUTA_CSV = _cargar_rutas()
+
+
+def _enmascarar_id(num_id: str) -> str:
+    """
+    Enmascara un numero de ID para impresion segura. (SEC-007 fix)
+    Ejemplo: 1069729185 -> 106****185
+    """
+    if len(num_id) <= 6:
+        return "***"
+    return num_id[:3] + "*" * (len(num_id) - 6) + num_id[-3:]
 
 # ---------------------------------------------------------------------------
 # Helpers de presentacion
@@ -137,29 +170,29 @@ def main() -> None:
     ]
     imprimir_tabla(filas_resumen, campos)
 
-    # -- Coincidencias detalladas ---------------------------------------------
+    # -- Coincidencias detalladas — IDs enmascarados (SEC-007 fix) -----------
     seccion(f"COINCIDENCIAS ENCONTRADAS — {len(resultado['coincidencias'])} registros presentes en AMBOS archivos")
-    imprimir_tabla(
-        resultado["coincidencias"],
-        campos=["tipo_id", "descripcion", "num_id", "hoja_ods"],
-        max_filas=30,
-    )
+    coincidencias_mask = [
+        {**r, "num_id": _enmascarar_id(r["num_id"])}
+        for r in resultado["coincidencias"]
+    ]
+    imprimir_tabla(coincidencias_mask, campos=["tipo_id", "descripcion", "num_id", "hoja_ods"], max_filas=30)
 
     # -- Solo en CSV ----------------------------------------------------------
     seccion(f"SOLO EN CSV (QA Adviser) — {len(resultado['solo_en_csv'])} registros NO encontrados en el Estimador")
-    imprimir_tabla(
-        resultado["solo_en_csv"],
-        campos=["tipo_id", "descripcion", "num_id"],
-        max_filas=20,
-    )
+    solo_csv_mask = [
+        {**r, "num_id": _enmascarar_id(r["num_id"])}
+        for r in resultado["solo_en_csv"]
+    ]
+    imprimir_tabla(solo_csv_mask, campos=["tipo_id", "descripcion", "num_id"], max_filas=20)
 
     # -- Solo en ODS ----------------------------------------------------------
     seccion(f"SOLO EN ODS (Estimador) — {len(resultado['solo_en_ods'])} registros NO encontrados en el CSV QA")
-    imprimir_tabla(
-        resultado["solo_en_ods"],
-        campos=["tipo_id", "descripcion", "num_id", "hoja"],
-        max_filas=20,
-    )
+    solo_ods_mask = [
+        {**r, "num_id": _enmascarar_id(r["num_id"])}
+        for r in resultado["solo_en_ods"]
+    ]
+    imprimir_tabla(solo_ods_mask, campos=["tipo_id", "descripcion", "num_id", "hoja"], max_filas=20)
 
     # -- Distribucion de tipos en CSV -----------------------------------------
     titulo("DISTRIBUCION DE TIPOS DE DOCUMENTO EN CSV (QA)")

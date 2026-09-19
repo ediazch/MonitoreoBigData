@@ -18,6 +18,7 @@ from datetime import datetime
 # Reutilizamos el motor de aura_mem
 sys.path.insert(0, os.path.dirname(__file__))
 from aura_mem import conectar, _sesion_activa, _icono, cmd_resumen
+from compresor import comprimir_sesion, comprimir_automatico, UMBRAL_COMPRIMIR
 
 SESION_FILE = os.path.join(os.path.dirname(__file__), ".sesion_activa")
 SEP = "=" * 60
@@ -196,8 +197,15 @@ def _cerrar_sesion(conn: sqlite3.Connection, sid: str, resumen_manual: str = Non
     print(f"\n{SEP}")
     print(f"  {tag} Sesion: {sid}")
     print(f"  Observaciones guardadas: {len(obs)}")
-    print(f"  Resumen: {resumen}")
+    print(f"  Resumen inicial: {resumen}")
     print(SEP)
+
+    # Compresion automatica si supera el umbral
+    if len(obs) >= UMBRAL_COMPRIMIR:
+        print(f"\n[compresor] {len(obs)} obs >= umbral ({UMBRAL_COMPRIMIR}) — comprimiendo automaticamente...")
+        comprimir_sesion(sid, verbose=True)
+    else:
+        print(f"[compresor] {len(obs)} obs < umbral ({UMBRAL_COMPRIMIR}) — sin compresion necesaria.")
 
 
 def _generar_resumen_local(obs: list) -> str:

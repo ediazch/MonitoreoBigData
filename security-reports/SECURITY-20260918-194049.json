@@ -1,0 +1,136 @@
+{
+  "scope": "proyecto-completo",
+  "fecha": "20260918-194049",
+  "hallazgos": [
+    {
+      "regla_id": "SEC-007",
+      "severidad": "HIGH",
+      "nombre": "Datos sensibles en logs",
+      "archivo": "analisis_relacion.py",
+      "linea": 117,
+      "codigo": "    print(f\"        ODS  -> {len(hojas_ods)} hojas cargadas: {list(hojas_ods.keys())}\")",
+      "descripcion": "Datos sensibles pueden aparecer en logs",
+      "recomendacion": "Nunca loggear credenciales. Usar logging.debug('[REDACTED]')"
+    },
+    {
+      "regla_id": "SEC-007",
+      "severidad": "HIGH",
+      "nombre": "Datos sensibles en logs",
+      "archivo": "memory\\compresor.py",
+      "linea": 342,
+      "codigo": "        print(f\"  Ahorro estimado de tokens   : {ahorro}%\")",
+      "descripcion": "Datos sensibles pueden aparecer en logs",
+      "recomendacion": "Nunca loggear credenciales. Usar logging.debug('[REDACTED]')"
+    },
+    {
+      "regla_id": "SEC-007",
+      "severidad": "HIGH",
+      "nombre": "Datos sensibles en logs",
+      "archivo": "memory\\compresor.py",
+      "linea": 346,
+      "codigo": "    print(f\"  Algoritmo fallback          : Reglas inteligentes (frecuencia + keywords)\")",
+      "descripcion": "Datos sensibles pueden aparecer en logs",
+      "recomendacion": "Nunca loggear credenciales. Usar logging.debug('[REDACTED]')"
+    },
+    {
+      "regla_id": "SEC-008",
+      "severidad": "MEDIUM",
+      "nombre": "Excepcion generica capturada",
+      "archivo": "memory\\compresor.py",
+      "linea": 94,
+      "codigo": "        except Exception:",
+      "descripcion": "Capturar Exception generica oculta errores de seguridad",
+      "recomendacion": "Capturar excepciones especificas: except (ValueError, KeyError) as e"
+    },
+    {
+      "regla_id": "SEC-008",
+      "severidad": "MEDIUM",
+      "nombre": "Excepcion generica capturada",
+      "archivo": "memory\\compresor.py",
+      "linea": 105,
+      "codigo": "    except Exception as e:",
+      "descripcion": "Capturar Exception generica oculta errores de seguridad",
+      "recomendacion": "Capturar excepciones especificas: except (ValueError, KeyError) as e"
+    },
+    {
+      "regla_id": "SEC-008",
+      "severidad": "MEDIUM",
+      "nombre": "Excepcion generica capturada",
+      "archivo": "memory\\compresor.py",
+      "linea": 182,
+      "codigo": "    except Exception:",
+      "descripcion": "Capturar Exception generica oculta errores de seguridad",
+      "recomendacion": "Capturar excepciones especificas: except (ValueError, KeyError) as e"
+    },
+    {
+      "regla_id": "SEC-008",
+      "severidad": "MEDIUM",
+      "nombre": "Excepcion generica capturada",
+      "archivo": "memory\\watcher.py",
+      "linea": 125,
+      "codigo": "        except Exception as e:",
+      "descripcion": "Capturar Exception generica oculta errores de seguridad",
+      "recomendacion": "Capturar excepciones especificas: except (ValueError, KeyError) as e"
+    },
+    {
+      "regla_id": "SEC-008",
+      "severidad": "MEDIUM",
+      "nombre": "Excepcion generica capturada",
+      "archivo": "memory\\watcher.py",
+      "linea": 162,
+      "codigo": "            except Exception as e:",
+      "descripcion": "Capturar Exception generica oculta errores de seguridad",
+      "recomendacion": "Capturar excepciones especificas: except (ValueError, KeyError) as e"
+    },
+    {
+      "regla_id": "SEC-008",
+      "severidad": "MEDIUM",
+      "nombre": "Excepcion generica capturada",
+      "archivo": "skills\\headroom.py",
+      "linea": 52,
+      "codigo": "    except Exception:",
+      "descripcion": "Capturar Exception generica oculta errores de seguridad",
+      "recomendacion": "Capturar excepciones especificas: except (ValueError, KeyError) as e"
+    },
+    {
+      "regla_id": "SEC-008",
+      "severidad": "MEDIUM",
+      "nombre": "Excepcion generica capturada",
+      "archivo": "skills\\headroom.py",
+      "linea": 224,
+      "codigo": "    except Exception:",
+      "descripcion": "Capturar Exception generica oculta errores de seguridad",
+      "recomendacion": "Capturar excepciones especificas: except (ValueError, KeyError) as e"
+    },
+    {
+      "regla_id": "SEC-008",
+      "severidad": "MEDIUM",
+      "nombre": "Excepcion generica capturada",
+      "archivo": "skills\\ralph.py",
+      "linea": 71,
+      "codigo": "    except Exception as e:",
+      "descripcion": "Capturar Exception generica oculta errores de seguridad",
+      "recomendacion": "Capturar excepciones especificas: except (ValueError, KeyError) as e"
+    },
+    {
+      "regla_id": "SEC-008",
+      "severidad": "MEDIUM",
+      "nombre": "Excepcion generica capturada",
+      "archivo": "skills\\security.py",
+      "linea": 327,
+      "codigo": "    except Exception as e:",
+      "descripcion": "Capturar Exception generica oculta errores de seguridad",
+      "recomendacion": "Capturar excepciones especificas: except (ValueError, KeyError) as e"
+    },
+    {
+      "regla_id": "SEC-008",
+      "severidad": "MEDIUM",
+      "nombre": "Excepcion generica capturada",
+      "archivo": "skills\\task_observer.py",
+      "linea": 299,
+      "codigo": "            except Exception:",
+      "descripcion": "Capturar Exception generica oculta errores de seguridad",
+      "recomendacion": "Capturar excepciones especificas: except (ValueError, KeyError) as e"
+    }
+  ]
+}
