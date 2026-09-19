@@ -5,8 +5,11 @@ proyecto:
 
 rutas:
   datos_externos:
-    ods: "C:/Users/ediazch/Documents/Monitoreo de productos/DatosTest/DATA/Data_Income_estimator_V1.ods"
-    csv: "C:/Users/ediazch/Documents/Monitoreo de productos/DatosTest/DATA/Data_pruebas_Income(Adviser)QA 1.csv"
+    ods: ""
+    csv: ""
+    # Las rutas reales se configuran via variables de entorno:
+    # MONITOREO_RUTA_ODS=<ruta completa al archivo ODS>
+    # MONITOREO_RUTA_CSV=<ruta completa al archivo CSV>
   raw: "data/raw/dataset_original.csv"
   processed: "data/processed/dataset_limpio.csv"
 

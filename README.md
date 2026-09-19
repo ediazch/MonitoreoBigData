@@ -78,8 +78,8 @@ python -c "import nltk; nltk.download('punkt_tab'); nltk.download('stopwords')"
 
 El proyecto cruza dos archivos de datos de identidad:
 
-- `Data_Income_estimator_V1.ods` — estimador de ingresos con 10 hojas por tipo de documento
-- `Data_pruebas_Income(Adviser)QA 1.csv` — casos de prueba QA del sistema Adviser
+- `[FUENTE_ODS]` — estimador con 10 hojas por tipo de documento
+- `[FUENTE_CSV]` — casos de prueba QA del sistema
 
 **Relación clave:**
 ```
