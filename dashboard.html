@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MonitoreoBigData — Dashboard</title>
+    <style>
+        /* Sistema de diseno — impeccable */
+        :root {
+            --color-bg:       #f8f9fa;
+            --color-surface:  #ffffff;
+            --color-border:   #e2e8f0;
+            --color-text:     #1a202c;
+            --color-text-muted: #4a5568;
+            --color-primary:  #2b6cb0;
+            --color-success:  #276749;
+            --color-warning:  #744210;
+            --color-error:    #742a2a;
+            --color-ok-bg:    #f0fff4;
+            --color-err-bg:   #fff5f5;
+            --font:           system-ui, -apple-system, sans-serif;
+            --space-1: 4px; --space-2: 8px; --space-3: 12px;
+            --space-4: 16px; --space-6: 24px; --space-8: 32px;
+            --radius: 6px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: var(--font);
+            background: var(--color-bg);
+            color: var(--color-text);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        /* Layout */
+        .header {
+            background: var(--color-surface);
+            border-bottom: 1px solid var(--color-border);
+            padding: var(--space-4) var(--space-8);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .header h1 { font-size: 18px; font-weight: 600; color: var(--color-primary); }
+        .header .meta { font-size: 12px; color: var(--color-text-muted); }
+
+        .main { padding: var(--space-6) var(--space-8); max-width: 1400px; margin: 0 auto; }
+
+        /* Metricas */
+        .metricas { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-4); margin-bottom: var(--space-6); }
+        .metrica {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius);
+            padding: var(--space-4) var(--space-6);
+        }
+        .metrica .valor { font-size: 28px; font-weight: 700; color: var(--color-primary); }
+        .metrica .label { font-size: 12px; color: var(--color-text-muted); margin-top: var(--space-1); }
+        .metrica.ok    { border-left: 3px solid #48bb78; }
+        .metrica.warn  { border-left: 3px solid #ed8936; }
+        .metrica.error { border-left: 3px solid #fc8181; }
+
+        /* Tabla */
+        .seccion {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius);
+            margin-bottom: var(--space-4);
+        }
+        .seccion-header {
+            padding: var(--space-3) var(--space-4);
+            border-bottom: 1px solid var(--color-border);
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        table { width: 100%; border-collapse: collapse; }
+        th {
+            text-align: left;
+            padding: var(--space-2) var(--space-4);
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--color-border);
+        }
+        td { padding: var(--space-3) var(--space-4); border-bottom: 1px solid var(--color-border); font-size: 13px; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: var(--color-bg); }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 9999px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .badge-ok    { background: var(--color-ok-bg);  color: var(--color-success); }
+        .badge-error { background: var(--color-err-bg); color: var(--color-error); }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>MonitoreoBigData</h1>
+        <span class="meta">Ultima actualizacion: <span id="fecha"></span></span>
+    </header>
+
+    <main class="main">
+        <!-- Metricas globales -->
+        <div class="metricas">
+            <div class="metrica ok">
+                <div class="valor">662</div>
+                <div class="label">Coincidencias totales</div>
+            </div>
+            <div class="metrica ok">
+                <div class="valor">99.4%</div>
+                <div class="label">Cobertura CSV sobre ODS</div>
+            </div>
+            <div class="metrica warn">
+                <div class="valor">4</div>
+                <div class="label">Solo en CSV (gaps QA)</div>
+            </div>
+            <div class="metrica error">
+                <div class="valor">50%</div>
+                <div class="label">Cobertura tipo 13 PPT</div>
+            </div>
+        </div>
+
+        <!-- Tabla de resultados por tipo -->
+        <div class="seccion">
+            <div class="seccion-header">Relacion por tipo de documento</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tipo</th>
+                        <th>Descripcion</th>
+                        <th>Total CSV</th>
+                        <th>Total ODS</th>
+                        <th>Coincidencias</th>
+                        <th>Cobertura</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-datos">
+                    <!-- Datos se insertan via JS -->
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <script>
+        document.getElementById("fecha").textContent = new Date().toLocaleString("es-CO");
+
+        const datos = [
+            { tipo:"1",  desc:"Cedula de Ciudadania",              csv:101, ods:101, coin:101, pct:100.0 },
+            { tipo:"3",  desc:"Cedula de Extranjeria",             csv:27,  ods:27,  coin:27,  pct:100.0 },
+            { tipo:"4",  desc:"Tarjeta de Identidad",              csv:114, ods:114, coin:114, pct:100.0 },
+            { tipo:"5",  desc:"Pasaporte",                         csv:98,  ods:98,  coin:98,  pct:100.0 },
+            { tipo:"6",  desc:"Tarjeta Seguro Social",             csv:154, ods:153, coin:153, pct:99.4  },
+            { tipo:"9",  desc:"Registro Civil",                    csv:6,   ods:6,   coin:6,   pct:100.0 },
+            { tipo:"10", desc:"Carnet Diplomatico",                csv:27,  ods:26,  coin:26,  pct:96.3  },
+            { tipo:"11", desc:"Patente de Automotor",              csv:64,  ods:63,  coin:63,  pct:98.4  },
+            { tipo:"12", desc:"Permiso Especial Permanencia (PEP)",csv:73,  ods:73,  coin:73,  pct:100.0 },
+            { tipo:"13", desc:"Permiso Proteccion Temporal (PPT)", csv:2,   ods:36,  coin:1,   pct:50.0  },
+        ];
+
+        const tbody = document.getElementById("tabla-datos");
+        datos.forEach(d => {
+            const cls  = d.pct === 100 ? "badge-ok" : d.pct >= 95 ? "" : "badge-error";
+            const row  = `<tr>
+                <td><strong>${d.tipo}</strong></td>
+                <td>${d.desc}</td>
+                <td>${d.csv}</td>
+                <td>${d.ods}</td>
+                <td>${d.coin}</td>
+                <td><span class="badge ${cls}">${d.pct}%</span></td>
+            </tr>`;
+            tbody.insertAdjacentHTML("beforeend", row);
+        });
+    </script>
+</body>
+</html>
