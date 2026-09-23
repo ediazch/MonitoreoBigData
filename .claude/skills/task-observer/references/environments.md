@@ -3,6 +3,28 @@
 Load this for setup questions, compaction/resume behaviour, or when running
 in an environment without filesystem access.
 
+## Contents
+
+- Recommended activation setup
+  - The activation block
+  - Anchoring the workspace
+  - A session-start hook (Claude Code and similar harnesses)
+  - Verify activation in a NEW session — the installing session cannot prove it
+  - Activation config — late, intermittent, and why the guard cannot live inside it
+  - Install-layout hazards — three ways a skill silently stops existing
+  - Two harness behaviours that block the protocol rather than break it
+  - If CLAUDE.md (or the equivalent config) is governance-protected
+- Environment mappings
+- Git as an optional staging medium
+- First-run backfill
+- Storage regimes
+- Bundle manifest
+- Compaction behaviour
+- User-facing documentation
+- Repo/maintainer sessions — verify commit identity before writing
+- Handoff-doc mode (no persistent storage)
+- Handoff-doc analysis (when one arrives)
+
 ## Recommended activation setup
 
 Four activation tiers exist, and only the strongest is enforced. Pick
@@ -85,7 +107,7 @@ the checklist rather than in a disposition.
 
 ### The activation block
 
-```
+```text
 Before the first tool call of any session — and before writing or
 proposing a plan, not merely before executing one — invoke the
 task-observer skill AND execute its Session Start Protocol (storage
@@ -107,10 +129,18 @@ first task boundary instead of never.
 
 Loading a skill is not complete until you have queried the observation
 log for OPEN observations naming it and read their bodies:
-  grep -l "skill:.*<skill-name>" \
-    [ABSOLUTE PATH]/skill-observations/observation-log/*.md
-Apply their insights to the current work, even if the skill file hasn't
-been updated yet. Run this at every skill load, however many skills load
+  find "[ABSOLUTE PATH]/skill-observations/observation-log" -maxdepth 1 \
+    -name '*.md' -exec grep -l "skill:.*<skill-name>" {} +
+(Use find, not a bare *.md glob. Under zsh an unmatched glob is an error,
+so on an empty log the command never runs and the enclosing block aborts —
+and 2>/dev/null does not help, because the redirection belongs to a
+command that never starts. This is the first thing that fires on a fresh
+install, in every session, for as long as the log is empty.)
+Apply their insights to the current work — meaning: let them change what
+you do in THIS task. Editing the skill file, or writing the rule into any
+other file a later session reads, is acting on the observation and waits
+for the review. See "Log, don't act" in SKILL.md: the test is whether the
+action leaves a durable change outside the observation log. Run this at every skill load, however many skills load
 in one session. The session-start scan does not cover it: that is a
 frontmatter sweep over every observation at session start, this is a
 body-level lookup for one skill at the moment its rules are applied.
@@ -130,6 +160,12 @@ environment mints a separate project identity per checkout, or more than
 one agent works this project, the pinned path above is the single shared
 location; do not derive one per session, tool or project.
 ```
+
+### Anchoring the workspace
+
+SKILL.md's `[workspace folder]` definition states the rule; this is where
+to pin it, how a stable anchor still goes plural, and which plural case is
+legitimate.
 
 Fill in the path when installing. Pinning turns anchoring into a one-time
 decision instead of one the agent re-litigates every session with a fresh
@@ -166,6 +202,29 @@ block in `weekly-review.md` before consolidating anything — it defines
 that case and the aggregate review that serves it. A reader who stops at
 this paragraph consolidates a set that was meant to stay separate.
 
+**The fork rule as usually stated describes the harmless case.** "A second
+**empty** log beside a populated one is a silent fork" — but an empty log
+announces itself: the first scan returns nothing, and nobody trusts a
+backlog of zero. The damaging fork is the one that has accumulated its own
+entries. From inside it looks exactly like a working log: the scan returns
+files, the review finds work, every instrument reports health. Nothing in
+it can reveal that it is a shard.
+
+And pinning does not settle it. Observed: a workspace pinned in a wired
+session-start hook, correctly configured, running beside a second populated
+workspace for three days and producing colliding ids. The pin governs the
+sessions that read it; it does nothing about a session that resolved its
+anchor before the pin, or by another route.
+
+So the detection has to be positive, and it is nearly free: at the end of
+the session-start scan the agent is already holding the `skill:` values of
+every entry. A log whose targets are overwhelmingly **user-scope** skills,
+while the log itself sits under a **per-project** path, has already
+declared the mismatch — two `ls` and a comparison. Run it when the anchor
+is per-project and the targets are not; report the candidate shard rather
+than consolidating on your own judgement, because one plural case is
+legitimate (see the multi-log block in `weekly-review.md`).
+
 **Before creating a log, search for one.** Check the plausible anchor
 candidates — the pinned path, the project identity root, the
 environment-managed persistence directory, the shared folder, the other
@@ -178,8 +237,13 @@ sessions anchored there get redirected instead of re-creating the fork.
 
 **Config detection (once per session):** with filesystem access, check the
 workspace root's CLAUDE.md (or equivalent) for a task-observer activation
-instruction — suggest adding it if absent, creating the file if none
-exists. Without filesystem access, check the system prompt / project
+instruction — suggest adding it if absent. **Suggest; do not create.** If
+no config file exists at all, offer to add one and let the user say yes:
+creating a tracked project file changes every future session's behaviour,
+and the governance-protected fallback below exists precisely because
+writing to a shared config is not a free action. SKILL.md step 4 says
+"suggest" and these two are read in sequence, so they must not disagree.
+Without filesystem access, check the system prompt / project
 instructions and suggest the user add the instruction there. Keep the
 suggestion to a sentence or two. The block above is the propagated
 artefact: suggest it whole, including the anchoring paragraph, because
@@ -238,7 +302,7 @@ last=$(cat "$d/last-review-date.txt" 2>/dev/null || echo never)
 msg="Invoke the task-observer skill before the first tool call."
 if [ "$open" -gt 0 ]; then
   msg="$msg $open open observations; last review: $last."
-  case "$last" in never) msg="$msg Offer the review." ;; esac
+  case "$last" in (never) msg="$msg Offer the review." ;; esac
 fi
 printf '{"hookSpecificOutput":{"hookEventName":"SessionStart","additionalContext":"%s"}}\n' "$msg"
 ```
@@ -287,6 +351,130 @@ is the one that catches a skipped install step: **if
 of tool-using work, activation never happened**; check the activation
 block in the config, or install the hook. The README carries the same
 diagnostic for users who never read this file.
+
+### Activation config — late, intermittent, and why the guard cannot live inside it
+
+SKILL.md step 1 carries the instruction (on turn 1, load the session-start
+skills directly rather than assuming the config did, and read the config
+yourself if the mount resolves but its content is not in context). This is
+the reasoning behind it, and the reason that instruction is only the backup.
+
+In some hosted or bridged session types the activation config — a project
+instruction file, a session-start hook's context — does not reach context
+until the **second** user turn, while the workspace it lives in is already
+mounted and probes clean. From inside turn 1 a config that is merely late is
+indistinguishable from one that is absent, so a whole substantive turn can
+run with no session-start skill loaded. **A config delivered on a later turn
+than the work it governs is equivalent to an absent one for that work.**
+
+It has also been seen **intermittent** rather than merely late: present for
+turns 2 and 3 of a bridged session, then reported as no longer present at
+turn 4, with no change in the workspace link and nothing the session did to
+cause it. So a rule anchored on "once it arrives it stays" fails the same way
+a rule anchored on "it arrives first" does. Do not treat an earlier turn's
+config as still in force.
+
+The durable form: **a guard against an activation config failing to load
+cannot live inside the thing that config loads.** The guard in SKILL.md step
+1 is in `task-observer`, which is loaded *because* the config says to load
+it — so on the turn where the config is missing, nothing puts that guard in
+context either. By construction it cannot fire on turn 1.
+
+The primary guard therefore belongs in the earliest channel verified present
+on turn 1 — in most harnesses the user-level preferences or system-prompt
+block, which is where the line
+
+> then read the workspace config and follow it before any other work
+
+goes. See the activation tiers above: that channel is tier 0, and the step-1
+guard is the backup for turns 2+ and for sessions where the skill happens to
+be loaded directly.
+
+**Log the cause, not just the miss.** When a session-start load is skipped,
+the fix depends on which of these it was: *absent* (config unreachable),
+*present-but-not-yet-injected* (late — record the turn it arrived), *present
+and skipped* (attention), or *loaded-but-not-run* (the invocation succeeded
+and the protocol inside it never executed). Only the first two are fixed by
+changing the channel; the last two are not, and an environmental cause found
+first will otherwise absorb the whole explanation.
+
+### Install-layout hazards — three ways a skill silently stops existing
+
+Each of these leaves no error. The skill simply stops being offered, or an
+activation tier stops firing, and the only symptom is that the Session Start
+Protocol no longer runs — which is indistinguishable from a session where it
+ran and found nothing.
+
+**Skill discovery is exactly one level deep.** The host reads the skills
+directory and looks for `<entry>/SKILL.md`. There is no recursive lookup. On
+a library of any size the natural organising instinct is to group skills into
+category folders — `skills/seo/`, `skills/clients/`, `skills/writing/` — and
+doing so makes **every skill inside them cease to exist**: no error, no
+warning, no change in behaviour except that the skills stop being offered.
+There is nothing to debug, because "not found" has no error to report. The
+layout is not merely the happy path; it is the rule, and it does not travel
+with the maintainer who reorganises six months later. Keep every skill
+directly under the skills directory.
+
+**A backup inside the skills directory registers as a rival skill.** The
+obvious way to back a skill up before overwriting it —
+`cp -r ~/.claude/skills/task-observer ~/.claude/skills/.task-observer-backup`
+— puts a second copy where the host is looking. The leading dot does not
+exclude it from discovery. The available-skills list then holds two entries
+with near-identical descriptions, and the backup still advertises the OLD
+version's trigger, including its session-start instruction. That defeats the
+upgrade at the one activation tier that survives an unreachable config:
+description matching now has two candidates competing for the same trigger,
+one of them the file the upgrade just replaced. Back up **outside** the
+skills directory.
+
+**A hook registered by script path dies when the exec bit goes.** The
+docs' example reads most naturally as naming the script directly:
+
+```json
+{ "type": "command", "command": "'/path/to/hooks/task-observer-activation.sh'" }
+```
+
+Anything that rewrites file modes — a cloud-drive resync switching between
+stream and mirror mode, a restore from an archive, a checkout on a
+filesystem without permission bits — returns the file as mode 600, and the
+hook then fails with "permission denied" on every session start with
+nothing surfacing the error. Observed: the enforced activation tier was
+dead for days. Register the interpreter instead
+(`"command": "bash '/path/to/hooks/…'"`), which does not depend on the exec
+bit, and treat "the Session Start Protocol stopped running" as a prompt to
+check the hook rather than the skill.
+
+### Two harness behaviours that block the protocol rather than break it
+
+**A command-shape guard can refuse a read-only call.** Some setups run a
+pre-tool hook that inspects the literal command text for governed path
+segments combined with a write indicator (`=`, `>`, `cp`, `mv`) and denies
+the whole call when both appear anywhere in the string — regardless of
+whether the path is actually being written to. Two consequences worth
+knowing before diagnosing: a `cd` into a governed directory followed by a
+read-only script call is denied even though nothing is written; and a
+**blocked command merely quoted inside an observation body** can trip the
+same guard when that body is written through a shell. Neither is a
+permission problem with the destination. Where this bites, invoke the
+script with an absolute path and no `cd`, and write observation bodies with
+the editing tool rather than through a shell.
+
+**Staging a harness configuration change is not like staging a skill.** A
+skill's `SKILL.md` is read by itself; a corrupted staged copy fails to parse
+and nothing else is affected. A harness config file — `settings.json` with
+its hook entries, deny-lists and protection rules — is read by the harness,
+and it commonly carries **other protections alongside** the thing being
+changed. The natural delivery shape for a config change is a fragment:
+"here's the new key, add it under `hooks`". A hand-merge that goes wrong
+there does not fail loudly; it produces a valid file with the other
+protections missing.
+
+So: deliver a config change as a **complete replacement file** built from
+the user's current one, never as a fragment to splice in; state in one line
+what else that file was carrying, so the user can verify it survived; and
+where the harness supports it, prefer a separate file over editing a shared
+one.
 
 ### If CLAUDE.md (or the equivalent config) is governance-protected
 

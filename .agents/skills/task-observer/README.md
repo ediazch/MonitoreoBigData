@@ -2,9 +2,9 @@
 
 ## The meta-skill that builds and improves all your skills, including itself.
 
-In the first seven months of using this meta-skill, it **logged almost 1400 observations across my 78 skills**, most of which were turned into skill improvements. The majority of my 78 skills were themselves created based on observations by the meta-skill.
+This meta-skill has **logged over 1,500 observations across my 82 skills**, most of which were turned into skill improvements. The majority of my 82 skills were themselves created based on observations by the meta-skill.
 
-The current version of task-observer also includes improvements suggested by 50 different users, across 103 issues and 26 pull requests. Without these contributions, the project wouldn't be half as good as it is today.
+The current version of task-observer also includes improvements suggested by 65 different users, across 141 issues and 33 pull requests. Without these contributions, the project wouldn't be half as good as it is today.
 
 This meta-skill is a practical application of the [Augmented Expertise](https://www.rebelytics.com/augmented-expertise/) methodology, an AI framework for knowledge workers. However, users have reported successful integrations into their Hermes and Openclaw setups, so it works equally well with autonomous agents.
 
@@ -65,6 +65,8 @@ The skill is a small bundle: `SKILL.md`, the files in `references/` that are loa
 
 **Other systems:** keep the folder structure intact wherever your platform expects skills, and let your AI guide you (see "How it works" above).
 
+**From the command line (skills.sh):** `npx skills add rebelytics/one-skill-to-rule-them-all --skill task-observer`. This is the most-used install route — the skills.sh listing reports over 7,000 installs, and it carries independent security audits from Gen Agent Trust Hub, Socket and Snyk.
+
 **Check that it actually runs.** Installing the files is not the same as activating the skill: description matching alone under-triggers, so add the activation instruction from `references/environments.md` to your CLAUDE.md (or your platform's equivalent) or install the session-start hook. Then verify in a *new* session — the session you install in cannot prove it — that the skill is invoked before the first tool call. The external tell if you skipped this: if `skill-observations/observation-log/` doesn't exist after a few sessions of real work, activation never happened.
 
 ## Claude environment notes
@@ -122,6 +124,20 @@ You're free to use, adapt, and redistribute — even commercially — as long as
 
 If you want to learn more about the methodology behind this skill, please read the [Augmented Expertise manifesto](https://www.rebelytics.com/augmented-expertise/).
 
+## Listed in
+
+task-observer is indexed in these community lists and skill directories:
+
+- [VoltAgent / awesome-agent-skills](https://github.com/VoltAgent/awesome-agent-skills)
+- [Get Claude Skills](https://www.getclaudeskills.com/skills/task-observer-rebelytics)
+- [Claude Code Marketplaces](https://claudemarketplaces.com/skills/rebelytics/one-skill-to-rule-them-all/task-observer)
+- [Surf Skills](https://surfskills.surf/s/rebelytics/one-skill-to-rule-them-all/task-observer)
+- [BehiSecc / awesome-claude-skills](https://github.com/BehiSecc/awesome-claude-skills)
+- [KIMI](https://www.kimi.ai/resources/claude-code-skills)
+- [CorpusIQ — Hermes skills catalog](https://www.corpusiq.io/docs/hermes/skills/catalog/task-observer-setup)
+
+It is also redistributed, unmodified and under CC BY 4.0, in [iamneilroberts/claude-skills](https://github.com/iamneilroberts/claude-skills).
+
 ## Recommended by
 
 I would like to thank the following creators, platforms, publications, companies and kind people who have recommended task-observer to their audiences:
@@ -130,7 +146,6 @@ I would like to thank the following creators, platforms, publications, companies
 - Kelli Hrivnak: [https://www.linkedin.com/posts/kellihrivnak_to-those-building-out-skills-in-claude-lets-share-7478433968837517312-UhPj/](https://www.linkedin.com/posts/kellihrivnak_to-those-building-out-skills-in-claude-lets-share-7478433968837517312-UhPj/)
 - Maverick Maltin: [https://www.tiktok.com/@maverickgpt/video/7661705764901227807](https://www.tiktok.com/@maverickgpt/video/7661705764901227807)
 - Claudia Faith: [https://levelupwithai.substack.com/p/this-is-how-you-use-claude-in-2026](https://levelupwithai.substack.com/p/this-is-how-you-use-claude-in-2026)
-- BehiSecc: [https://github.com/BehiSecc/awesome-claude-skills](https://github.com/BehiSecc/awesome-claude-skills)
 - Andrea Saez: [https://dreasaez.medium.com/your-ai-skills-are-silos-heres-how-to-fix-that-bdb04a507785](https://dreasaez.medium.com/your-ai-skills-are-silos-heres-how-to-fix-that-bdb04a507785)
 - Aashish Pahwa: [https://www.instagram.com/p/DXwqpPQj62s/](https://www.instagram.com/p/DXwqpPQj62s/)
 - Nick Saraev: [https://www.instagram.com/reels/DaN0yYtPzjY/](https://www.instagram.com/reels/DaN0yYtPzjY/)
@@ -138,11 +153,9 @@ I would like to thank the following creators, platforms, publications, companies
 - Myriam Jessier: [https://www.linkedin.com/posts/myriamjessier_i-feel-like-i-am-part-of-an-mlm-sponsored-share-7483809490992140288-6Lwm/](https://www.linkedin.com/posts/myriamjessier_i-feel-like-i-am-part-of-an-mlm-sponsored-share-7483809490992140288-6Lwm/)
 - Victor Dorneanu: [https://brainfck.org/t/self-improving-agents/](https://brainfck.org/t/self-improving-agents/)
 - CORE.TODAY: [https://core.today/blog/task-observer-meta-skill](https://core.today/blog/task-observer-meta-skill)
-- KIMI: [https://www.kimi.com/resources/claude-code-skills](https://www.kimi.com/resources/claude-code-skills)
 - Tom Dörr: [https://x.com/tom_doerr/status/2072251701608784049](https://x.com/tom_doerr/status/2072251701608784049)
 - Vaibhav Sisinty: [https://x.com/VaibhavSisinty/status/2063290847723192610](https://x.com/VaibhavSisinty/status/2063290847723192610)
 - Evgeny Shkuratov: [https://www.instagram.com/reels/DaHqy6MApwN/](https://www.instagram.com/reels/DaHqy6MApwN/)
-- Surf Skills: [https://surfskills.surf/s/rebelytics/one-skill-to-rule-them-all/task-observer](https://surfskills.surf/s/rebelytics/one-skill-to-rule-them-all/task-observer)
 - Juan Pablo Rosso: [https://www.instagram.com/reels/Dayv8dvjeLi/](https://www.instagram.com/reels/Dayv8dvjeLi/)
 - Johannes Manske: [https://www.linkedin.com/posts/johannesmanske_vor-8-wochen-war-ki-noch-sparringspartner-share-7461096580809547777-0ty7/](https://www.linkedin.com/posts/johannesmanske_vor-8-wochen-war-ki-noch-sparringspartner-share-7461096580809547777-0ty7/)
 - Xavier Ting: [https://xaviertingai.com/tools/task-observer.html](https://xaviertingai.com/tools/task-observer.html)
@@ -161,10 +174,11 @@ I would like to thank the following creators, platforms, publications, companies
 - Danielgpt2: [https://www.tiktok.com/@danielgpt2/photo/7663796072724172054](https://www.tiktok.com/@danielgpt2/photo/7663796072724172054)
 - Doit.systemIA: [https://www.youtube.com/shorts/535GKrg1E08](https://www.youtube.com/shorts/535GKrg1E08)
 - Erfan Yousefi: [https://codenight.ir/articles/claude-code-plugins](https://codenight.ir/articles/claude-code-plugins)
-- DecimalAI: [https://app.decimal.ai/skills/rebelytics-task-observer](https://app.decimal.ai/skills/rebelytics-task-observer)
 - MigueBaenaIA: [https://www.youtube.com/shorts/OBeoYZzHDcw](https://www.youtube.com/shorts/OBeoYZzHDcw)
 - Santiago Cosme: [https://www.linkedin.com/posts/santiagocosme_5-skills-para-poner-90-ugcPost-7491131673254846465-SQAl/](https://www.linkedin.com/posts/santiagocosme_5-skills-para-poner-90-ugcPost-7491131673254846465-SQAl/)
 - Skillselion: [https://skillselion.com/guides/task-observer-skill-claude-code-guide](https://skillselion.com/guides/task-observer-skill-claude-code-guide)
+- Adele Newenham: [https://www.aiwithadele.com/guides/claude-code-plugins](https://www.aiwithadele.com/guides/claude-code-plugins)
+- Hysen Labs: [https://hysenlabs.com/en/projects/rebelytics-one-skill-to-rule-them-all](https://hysenlabs.com/en/projects/rebelytics-one-skill-to-rule-them-all)
 
 If I forgot to list your recommendation here, please let me know or submit it via a PR in the same format as the others.
 
