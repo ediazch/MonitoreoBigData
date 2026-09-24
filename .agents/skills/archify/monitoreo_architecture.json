@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "MonitoreoBigData — Arquitectura del Proyecto",
+    "quality_profile": "showcase"
+  },
+  "components": [
+    { "id": "datos_raw",      "type": "database",  "label": "Datos Crudos",      "sublabel": "data/raw/",              "pos": [40,  260], "size": [130, 60] },
+    { "id": "limpieza",       "type": "backend",   "label": "Limpieza",           "sublabel": "src/limpieza.py",        "pos": [220, 260], "size": [130, 60] },
+    { "id": "transformacion", "type": "backend",   "label": "Transformacion",     "sublabel": "src/transformacion.py",  "pos": [400, 260], "size": [130, 60] },
+    { "id": "analisis",       "type": "backend",   "label": "Analisis ODS/CSV",   "sublabel": "analisis_relacion.py",   "pos": [580, 260], "size": [140, 60] },
+    { "id": "datos_proc",     "type": "database",  "label": "Datos Procesados",   "sublabel": "data/processed/",        "pos": [780, 260], "size": [140, 60] },
+    { "id": "config",         "type": "backend",   "label": "Configuracion",      "sublabel": "configuracion.yaml",     "pos": [400,  80], "size": [130, 60] },
+    { "id": "dashboard",      "type": "frontend",  "label": "Dashboard",          "sublabel": "dashboard.html",         "pos": [580,  80], "size": [130, 60] },
+    { "id": "tests",          "type": "backend",   "label": "Tests pytest",       "sublabel": "29 pruebas",             "pos": [220,  80], "size": [130, 60] },
+    { "id": "aura_mem",       "type": "database",  "label": "aura-mem",           "sublabel": "memory/ + SQLite",       "pos": [220, 440], "size": [130, 60] },
+    { "id": "skills",         "type": "cloud",     "label": "Skills Hibridos",    "sublabel": "8 skills adaptados",     "pos": [580, 440], "size": [140, 60] },
+    { "id": "graphify",       "type": "cloud",     "label": "Graphify",           "sublabel": "3412 nodos",             "pos": [780, 440], "size": [130, 60] },
+    { "id": "github",         "type": "external",  "label": "GitHub",             "sublabel": "ediazch/MonitoreoBigData","pos": [780,  80], "size": [130, 60] }
+  ],
+  "boundaries": [
+    { "kind": "region",         "label": "Pipeline de datos",  "wraps": ["limpieza", "transformacion", "analisis", "datos_proc"] },
+    { "kind": "security-group", "label": "Infraestructura",    "wraps": ["aura_mem", "skills", "graphify"] }
+  ],
+  "connections": [
+    { "id": "c1", "from": "datos_raw",      "to": "limpieza",       "label": "lee crudo",       "variant": "emphasis" },
+    { "id": "c2", "from": "limpieza",       "to": "transformacion",  "label": "normalizado",     "labelAt": [318, 340] },
+    { "id": "c3", "from": "transformacion", "to": "analisis",        "label": "cruza datos",     "variant": "emphasis", "labelAt": [498, 340] },
+    { "id": "c4", "from": "analisis",       "to": "datos_proc",      "label": "resultados" },
+    { "id": "c5", "from": "config",         "to": "analisis",        "label": "rutas",           "fromSide": "bottom", "toSide": "top", "labelDx": 30 },
+    { "id": "c6", "from": "analisis",       "to": "dashboard",       "label": "visualiza",       "fromSide": "top",    "toSide": "bottom", "labelAt": [630, 165] },
+    { "id": "c7", "from": "limpieza",       "to": "tests",           "label": "29 pruebas",      "fromSide": "top",    "toSide": "bottom", "labelDx": 40 },
+    { "id": "c8", "from": "analisis",       "to": "aura_mem",        "label": "registra",        "variant": "dashed",  "fromSide": "bottom", "toSide": "top" },
+    { "id": "c9", "from": "skills",         "to": "analisis",        "label": "audit/security",  "variant": "dashed",  "fromSide": "top",    "toSide": "bottom" },
+    { "id": "c10","from": "datos_proc",     "to": "github",          "label": "push",            "variant": "dashed",  "fromSide": "top",    "toSide": "bottom" }
+  ]
+}
