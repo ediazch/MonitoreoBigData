@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "Secuencia: Analisis ODS vs CSV",
+    "viewBox": [1080, 600],
+    "column_fit": "spread",
+    "animation": "trace",
+    "quality_profile": "showcase",
+    "views": [
+      { "id": "carga",     "label": "Carga de datos",   "focus": ["usuario", "script", "limpieza", "ods", "csv"],     "note": "El script carga y limpia los archivos fuente ODS y CSV." },
+      { "id": "cruce",     "label": "Cruce y analisis", "focus": ["script", "transform"],                              "note": "Transformacion cruza los datos y calcula estadisticas." },
+      { "id": "resultados","label": "Resultados",       "focus": ["script", "aura_mem", "dashboard", "usuario"],       "note": "Reporte, memoria y dashboard." }
+    ]
+  },
+  "participants": [
+    { "id": "usuario",   "type": "external",  "label": "Usuario",      "sublabel": "terminal" },
+    { "id": "script",    "type": "backend",   "label": "script.py",    "sublabel": "principal" },
+    { "id": "limpieza",  "type": "backend",   "label": "limpieza.py",  "sublabel": "src/" },
+    { "id": "transform", "type": "backend",   "label": "transform.py", "sublabel": "src/" },
+    { "id": "ods",       "type": "database",  "label": "ODS",          "sublabel": "raw/" },
+    { "id": "csv",       "type": "database",  "label": "CSV",          "sublabel": "raw/" },
+    { "id": "aura_mem",  "type": "database",  "label": "aura-mem",     "sublabel": "memory.db" },
+    { "id": "dashboard", "type": "frontend",  "label": "Dashboard",    "sublabel": "HTML" }
+  ],
+  "segments": [
+    { "from": 145, "to": 300, "label": "Carga y limpieza" },
+    { "from": 315, "to": 420, "label": "Cruce y estadisticas" },
+    { "from": 435, "to": 530, "label": "Resultados y salida" }
+  ],
+  "messages": [
+    { "id": "m01", "from": "usuario",   "to": "script",    "y": 160, "label": "ejecutar analisis",   "variant": "emphasis" },
+    { "id": "m02", "from": "script",    "to": "limpieza",  "y": 185, "label": "leer_ods()",          "variant": "default" },
+    { "id": "m03", "from": "limpieza",  "to": "ods",       "y": 210, "label": "zipfile + xml",       "variant": "default" },
+    { "id": "m04", "from": "ods",       "to": "limpieza",  "y": 238, "label": "697 registros",       "variant": "return" },
+    { "id": "m05", "from": "script",    "to": "limpieza",  "y": 268, "label": "leer_csv()",          "variant": "default" },
+    { "id": "m06", "from": "limpieza",  "to": "csv",       "y": 293, "label": "csv.reader()",        "variant": "default" },
+    { "id": "m07", "from": "csv",       "to": "limpieza",  "y": 325, "label": "666 filas",           "variant": "return" },
+    { "id": "m08", "from": "limpieza",  "to": "script",    "y": 355, "label": "normalizado",         "variant": "return" },
+    { "id": "m09", "from": "script",    "to": "transform", "y": 390, "label": "cruzar_datos()",      "variant": "emphasis" },
+    { "id": "m10", "from": "transform", "to": "script",    "y": 418, "label": "662 coincidencias",   "variant": "return" },
+    { "id": "m11", "from": "script",    "to": "aura_mem",  "y": 453, "label": "log resultado",       "variant": "dashed" },
+    { "id": "m12", "from": "script",    "to": "dashboard", "y": 483, "label": "genera HTML",         "variant": "dashed" },
+    { "id": "m13", "from": "script",    "to": "usuario",   "y": 513, "label": "reporte consola",     "variant": "return" }
+  ],
+  "activations": [
+    { "participant": "script",    "from": 155, "to": 511, "type": "backend" },
+    { "participant": "limpieza",  "from": 180, "to": 354, "type": "backend" },
+    { "participant": "transform", "from": 370, "to": 411, "type": "backend" },
+    { "participant": "ods",       "from": 205, "to": 244, "type": "database" },
+    { "participant": "csv",       "from": 288, "to": 324, "type": "database" },
+    { "participant": "aura_mem",  "from": 440, "to": 461, "type": "database" },
+    { "participant": "dashboard", "from": 470, "to": 486, "type": "frontend" }
+  ],
+  "cards": [
+    { "dot": "cyan",    "title": "Carga stdlib pura",  "items": ["leer_ods(): zipfile + xml.etree — sin dependencias", "leer_csv(): csv.reader con encoding utf-8-sig", "Ambos filtran filas vacias automaticamente"] },
+    { "dot": "rose",    "title": "Cruce de datos",     "items": ["cruzar_datos() usa sets Python para join O(n)", "Retorna coincidencias, solo_csv y solo_ods", "662 matches — 99.4% cobertura"] },
+    { "dot": "emerald", "title": "Salida segura",      "items": ["IDs enmascarados: 106****185", "aura-mem registra automaticamente", "Dashboard HTML con datos reales"] }
+  ]
+}

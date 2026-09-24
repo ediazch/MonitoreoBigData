@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Flujo de Datos — MonitoreoBigData",
+    "viewBox": [1300, 680],
+    "animation": "trace",
+    "quality_profile": "standard",
+    "views": [
+      { "id": "fuentes",      "label": "Fuentes de entrada", "focus": ["ods_src", "csv_src", "config"],                    "note": "Archivos externos e inputs de configuracion al sistema." },
+      { "id": "procesamiento","label": "Procesamiento",     "focus": ["limpieza", "transformacion", "gaps"],              "note": "Normalizacion, transformacion y deteccion de gaps criticos." },
+      { "id": "consumidores", "label": "Consumidores",      "focus": ["dashboard", "aura_mem", "github"],                  "note": "Salidas: dashboard visual, memoria persistente y repositorio." }
+    ]
+  },
+  "stages": [
+    { "label": "Fuentes" },
+    { "label": "Ingesta" },
+    { "label": "Limpieza" },
+    { "label": "Analisis" },
+    { "label": "Consumo" }
+  ],
+  "nodes": [
+    { "id": "ods_src",       "type": "external",    "label": "Archivo ODS",      "sublabel": "estimador ingresos",    "stage": 0, "row": 0, "tag": "10 hojas" },
+    { "id": "csv_src",       "type": "external",    "label": "Archivo CSV",      "sublabel": "casos QA Adviser",      "stage": 0, "row": 2, "tag": "666 registros" },
+    { "id": "config",        "type": "security",    "label": "Configuracion",    "sublabel": "env vars / YAML",       "stage": 0, "row": 1, "tag": "rutas seguras" },
+    { "id": "leer_ods",      "type": "backend",     "label": "leer_ods()",       "sublabel": "zipfile + xml.etree",   "stage": 1, "row": 0, "tag": "697 registros" },
+    { "id": "leer_csv",      "type": "backend",     "label": "leer_csv()",       "sublabel": "csv.reader stdlib",     "stage": 1, "row": 2, "tag": "666 registros" },
+    { "id": "limpieza",      "type": "backend",     "label": "limpieza.py",      "sublabel": "normalizar + dedup",    "stage": 2, "row": 1, "tag": "src/" },
+    { "id": "transformacion","type": "backend",     "label": "transformacion.py","sublabel": "cruce tipo_id + num_id","stage": 3, "row": 0, "tag": "src/" },
+    { "id": "gaps",          "type": "security",    "label": "Gap detector",     "sublabel": "tipo 13: 50% alerta",   "stage": 3, "row": 2, "tag": "CRITICO" },
+    { "id": "dashboard",     "type": "frontend",    "label": "Dashboard HTML",   "sublabel": "99.4% cobertura",       "stage": 4, "row": 0, "tag": "impeccable" },
+    { "id": "aura_mem",      "type": "database",    "label": "aura-mem",         "sublabel": "SQLite + Sumy LSA",     "stage": 4, "row": 1, "tag": "memoria" },
+    { "id": "github",        "type": "cloud",       "label": "GitHub",           "sublabel": "ediazch/MonitoreoBigData","stage": 4, "row": 2, "tag": "CI/CD" }
+  ],
+  "flows": [
+    { "id": "f01", "from": "ods_src",       "to": "leer_ods",      "label": "zipfile stream",   "classification": "raw binary",      "variant": "emphasis", "route": "straight", "labelAt": [175, 100] },
+    { "id": "f02", "from": "csv_src",       "to": "leer_csv",      "label": "utf-8-sig",        "classification": "text rows",       "variant": "default",  "route": "straight", "labelAt": [175, 440] },
+    { "id": "f03", "from": "config",        "to": "leer_ods",      "label": "ruta ODS",         "classification": "env var",         "variant": "security", "fromSide": "right", "toSide": "left", "via": [[235, 271], [235, 157]], "labelAt": [232, 200] },
+    { "id": "f04", "from": "config",        "to": "leer_csv",      "label": "ruta CSV",         "classification": "env var",         "variant": "security", "fromSide": "right", "toSide": "left", "via": [[235, 271], [235, 385]], "labelAt": [232, 340] },
+    { "id": "f05", "from": "leer_ods",      "to": "limpieza",      "label": "hojas raw",        "classification": "dict[hoja, filas]","variant": "default",  "fromSide": "right", "toSide": "left", "via": [[450, 157], [450, 271]], "labelAt": [448, 195] },
+    { "id": "f06", "from": "leer_csv",      "to": "limpieza",      "label": "filas raw",        "classification": "list[list[str]]", "variant": "default",  "fromSide": "right", "toSide": "left", "via": [[450, 385], [450, 271]], "labelAt": [448, 345] },
+    { "id": "f07", "from": "limpieza",      "to": "transformacion","label": "normalizado",      "classification": "list[dict]",      "variant": "emphasis", "fromSide": "right", "toSide": "left", "via": [[650, 271], [650, 157]], "labelAt": [648, 210] },
+    { "id": "f08", "from": "limpieza",      "to": "gaps",          "label": "tipos y conteos",  "classification": "analytics",       "variant": "security", "fromSide": "right", "toSide": "left", "via": [[650, 271], [650, 385]], "labelAt": [648, 338] },
+    { "id": "f09", "from": "transformacion","to": "dashboard",     "label": "662 coincidencias","classification": "resultados",      "variant": "emphasis", "route": "straight", "labelAt": [885, 100] },
+    { "id": "f10", "from": "transformacion","to": "aura_mem",      "label": "log sesion",       "classification": "observabilidad",  "variant": "dashed",   "fromSide": "right", "toSide": "left", "via": [[880, 157], [880, 271]], "labelAt": [877, 200] },
+    { "id": "f11", "from": "gaps",          "to": "github",        "label": "alerta en PR",     "classification": "security report", "variant": "security", "route": "straight" }
+  ],
+  "cards": [
+    { "dot": "cyan",    "title": "Ingesta sin dependencias", "items": ["ODS: zipfile + xml.etree — stdlib pura de Python", "CSV: csv.reader con encoding utf-8-sig para BOM de Excel", "Configuracion via env vars — rutas nunca en el codigo"] },
+    { "dot": "rose",    "title": "Privacidad por diseno",    "items": ["IDs enmascarados en consola: 106****185", "Rutas de archivos por variables de entorno", "Datos sensibles con tag <private> en aura-mem"] },
+    { "dot": "emerald", "title": "Consumidores del dato",    "items": ["Dashboard HTML con 99.4% cobertura visible", "aura-mem: memoria comprimida con Sumy LSA (93% ahorro)", "GitHub: CI/CD y auditoria con git hooks automaticos"] }
+  ]
+}

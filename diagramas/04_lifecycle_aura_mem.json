@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "diagram_type": "lifecycle",
+  "meta": {
+    "title": "Ciclo de Vida — Sesion aura-mem",
+    "viewBox": [1030, 750],
+    "animation": "trace",
+    "quality_profile": "standard",
+    "views": [
+      { "id": "flujo-normal",    "label": "Sesion normal",    "focus": ["inicio", "activa", "registrando", "comprimiendo", "cerrada"], "note": "Flujo desde apertura hasta cierre y compresion automatica." },
+      { "id": "interrupciones",  "label": "Pausas y errores", "focus": ["activa", "inactiva", "bloqueada", "fallida"],                 "note": "Inactividad, bloqueos y errores de IO de la sesion." },
+      { "id": "terminales",      "label": "Terminales",       "focus": ["cerrada", "expirada", "corrompida"],                         "note": "Los tres estados de fin de sesion." }
+    ]
+  },
+  "lanes": [
+    { "id": "main",    "label": "Ciclo principal" },
+    { "id": "waiting", "label": "Pausas y esperas" },
+    { "id": "errors",  "label": "Errores" },
+    { "id": "terminal","label": "Terminales" }
+  ],
+  "states": [
+    { "id": "inicio",       "type": "start",    "label": "Watcher inicia",  "sublabel": "VS Code abre",        "lane": "main",    "col": 0, "step": "01", "tag": "auto" },
+    { "id": "activa",       "type": "active",   "label": "Sesion activa",   "sublabel": "registrando cambios", "lane": "main",    "col": 1, "step": "02", "tag": "watcher.py" },
+    { "id": "registrando",  "type": "active",   "label": "Registrando",     "sublabel": "SQLite cmd_log()",    "lane": "main",    "col": 2, "step": "03", "tag": "aura_mem.py" },
+    { "id": "comprimiendo", "type": "decision", "label": "Comprimiendo",    "sublabel": "Sumy LSA >= 10 obs",  "lane": "main",    "col": 3, "step": "04", "tag": "compresor.py" },
+    { "id": "inactiva",     "type": "waiting",  "label": "Inactiva",        "sublabel": "30 min sin cambios",  "lane": "waiting", "col": 0, "tag": "timeout" },
+    { "id": "bloqueada",    "type": "waiting",  "label": "Bloqueada",       "sublabel": "DB locked",           "lane": "waiting", "col": 2, "tag": "wait" },
+    { "id": "fallida",      "type": "failure",  "label": "Fallo IO",        "sublabel": "error irrecuperable", "lane": "errors",  "col": 1, "yOffset": 78, "tag": "retryable" },
+    { "id": "cerrada",      "type": "success",  "label": "Sesion cerrada",  "sublabel": "resumen guardado",    "lane": "terminal","col": 2, "tag": "done" },
+    { "id": "expirada",     "type": "failure",  "label": "Expirada",        "sublabel": "cerrada por timeout", "lane": "terminal","col": 0, "yOffset": 120, "tag": "terminal" },
+    { "id": "corrompida",   "type": "failure",  "label": "DB corrompida",   "sublabel": "reiniciar memory.db", "lane": "terminal","col": 1, "tag": "terminal" }
+  ],
+  "transitions": [
+    { "id": "t01", "from": "inicio",      "to": "activa",       "variant": "emphasis" },
+    { "id": "t02", "from": "activa",      "to": "registrando",  "variant": "default" },
+    { "id": "t03", "from": "registrando", "to": "comprimiendo", "variant": "emphasis" },
+    { "id": "t04", "from": "activa",      "to": "inactiva",     "variant": "security", "fromSide": "bottom", "toSide": "top", "route": "drop" },
+    { "id": "t05", "from": "inactiva",    "to": "activa",       "variant": "emphasis", "fromSide": "top",    "toSide": "bottom" },
+    { "id": "t06", "from": "registrando", "to": "bloqueada",    "variant": "security", "fromSide": "bottom", "toSide": "top", "route": "drop" },
+    { "id": "t07", "from": "bloqueada",   "to": "registrando",  "variant": "emphasis", "fromSide": "top",    "toSide": "bottom" },
+    { "id": "t08", "from": "bloqueada",   "to": "fallida",      "variant": "security", "fromSide": "bottom", "toSide": "top", "route": "drop" },
+    { "id": "t09", "from": "fallida",     "to": "registrando",  "variant": "emphasis", "fromSide": "top",   "toSide": "bottom" },
+    { "id": "t10", "from": "comprimiendo","to": "cerrada",      "variant": "emphasis" },
+    { "id": "t11", "from": "inactiva",    "to": "expirada",     "variant": "security" },
+    { "id": "t12", "from": "fallida",     "to": "corrompida",   "variant": "security", "fromSide": "bottom", "toSide": "top", "route": "drop" }
+  ],
+  "cards": [
+    { "dot": "emerald", "title": "Flujo automatico",   "items": ["Watcher inicia sesion al abrir VS Code via tasks.json", "Cada archivo modificado o commit se registra automaticamente", "Sumy LSA comprime al cerrar si hay >= 10 observaciones"] },
+    { "dot": "rose",    "title": "Pausas y errores",   "items": ["DB bloqueada: espera y reintenta hasta 3 veces automaticamente", "30 min inactividad: cierre automatico y nueva sesion se abre sola", "Fallo IO irrecuperable escala a estado corrompida"] },
+    { "dot": "cyan",    "title": "Terminales",         "items": ["Cerrada: resumen comprimido guardado correctamente en SQLite", "Expirada: timeout sin perdida de datos previos de la sesion", "Corrompida: unico estado que requiere borrar memory.db manualmente"] }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Pipeline de Analisis ODS vs CSV",
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "flujo-principal",
+        "label": "Flujo principal",
+        "focus": ["inicio", "carga_ods", "carga_csv", "limpieza", "cruce", "reporte"],
+        "note": "Sigue el dato desde los archivos fuente hasta el reporte de coincidencias."
+      },
+      {
+        "id": "calidad-datos",
+        "label": "Calidad de datos",
+        "focus": ["limpieza", "normalizar", "dedup", "validar"],
+        "note": "Normalizacion de IDs, tipos de documento y eliminacion de duplicados."
+      },
+      {
+        "id": "resultados",
+        "label": "Resultados y alertas",
+        "focus": ["cruce", "gaps", "reporte", "dashboard"],
+        "note": "Coincidencias, gaps de cobertura y alertas criticas por tipo de documento."
+      }
+    ]
+  },
+  "lanes": [
+    { "id": "entrada",    "label": "Fuentes de datos" },
+    { "id": "proceso",    "label": "Pipeline Python" },
+    { "id": "calidad",    "label": "Calidad y validacion", "variant": "exception" },
+    { "id": "salida",     "label": "Resultados y salida" }
+  ],
+  "phases": [
+    { "id": "carga",      "label": "Carga",          "fromCol": 0, "toCol": 1 },
+    { "id": "transform",  "label": "Transformacion",  "fromCol": 2, "toCol": 3, "variant": "emphasis" },
+    { "id": "analisis",   "label": "Analisis y salida","fromCol": 4, "toCol": 5, "variant": "dashed" }
+  ],
+  "groups": [
+    { "id": "limpieza_group", "label": "Limpieza y normalizacion", "lane": "proceso",  "fromCol": 2, "toCol": 3, "variant": "emphasis" },
+    { "id": "gaps_group",     "label": "Deteccion de gaps",        "lane": "calidad",  "fromCol": 4, "toCol": 5, "variant": "security" }
+  ],
+  "mainPath": ["inicio", "carga_ods", "limpieza", "normalizar", "cruce", "reporte", "dashboard"],
+  "nodes": [
+    { "id": "inicio",     "lane": "entrada",  "col": 0, "type": "external",    "label": "Archivos fuente",  "sublabel": "ODS + CSV",              "width": 140 },
+    { "id": "carga_ods",  "lane": "entrada",  "col": 1, "type": "database",    "label": "leer_ods()",       "sublabel": "10 hojas tipo documento",  "width": 140 },
+    { "id": "carga_csv",  "lane": "proceso",  "col": 1, "type": "database",    "label": "leer_csv()",       "sublabel": "666 registros",            "width": 140 },
+    { "id": "limpieza",   "lane": "proceso",  "col": 2, "type": "backend",     "label": "limpiar_id()",     "sublabel": "strip + normalize",        "width": 140, "tag": "src/limpieza.py" },
+    { "id": "normalizar", "lane": "proceso",  "col": 3, "type": "backend",     "label": "normalizar()",     "sublabel": "tipo_id + num_id",         "width": 140, "tag": "src/limpieza.py" },
+    { "id": "dedup",      "lane": "calidad",  "col": 2, "type": "security",    "label": "eliminar_dup()",   "sublabel": "clave: tipo+num",          "width": 140, "tag": "deduplication" },
+    { "id": "validar",    "lane": "calidad",  "col": 3, "type": "security",    "label": "validar_tipo()",   "sublabel": "solo digitos validos",     "width": 140, "tag": "isdigit check" },
+    { "id": "cruce",      "lane": "proceso",  "col": 4, "type": "backend",     "label": "cruzar_datos()",   "sublabel": "662 coincidencias",        "width": 140, "tag": "src/transformacion.py" },
+    { "id": "gaps",       "lane": "calidad",  "col": 4, "type": "security",    "label": "Gaps detectados",  "sublabel": "tipo 13: 50% cobertura",   "width": 140, "tag": "alerta critica" },
+    { "id": "reporte",    "lane": "salida",   "col": 4, "type": "backend",     "label": "Reporte consola",  "sublabel": "IDs enmascarados",         "width": 140 },
+    { "id": "dashboard",  "lane": "salida",   "col": 5, "type": "frontend",    "label": "dashboard.html",   "sublabel": "visualizacion interactiva","width": 140 }
+  ],
+  "edges": [
+    { "from": "inicio",     "to": "carga_ods",  "label": "ODS",            "variant": "emphasis" },
+    { "from": "inicio",     "to": "carga_csv",  "label": "CSV",            "variant": "default" },
+    { "from": "carga_ods",  "to": "limpieza",   "label": "hojas raw",      "variant": "default" },
+    { "from": "carga_csv",  "to": "limpieza",   "label": "filas raw",      "variant": "default" },
+    { "from": "limpieza",   "to": "dedup",      "label": "valida",         "variant": "security", "role": "branch" },
+    { "from": "limpieza",   "to": "normalizar",                            "variant": "emphasis" },
+    { "from": "dedup",      "to": "validar",                               "variant": "security" },
+    { "from": "normalizar",  "to": "cruce",     "label": "normalizado",    "variant": "emphasis" },
+    { "from": "validar",    "to": "cruce",      "label": "limpio",         "variant": "dashed" },
+    { "from": "cruce",      "to": "gaps",       "label": "35 sin cubrir",  "variant": "security", "role": "error" },
+    { "from": "cruce",      "to": "reporte",    "label": "662 matches",    "variant": "emphasis" },
+    { "from": "reporte",    "to": "dashboard",  "label": "genera HTML",    "variant": "dashed" }
+  ],
+  "cards": [
+    { "dot": "cyan",    "title": "Fuentes de datos",   "items": ["ODS: 10 hojas por tipo de documento (CC, CE, TI, PAS...)", "CSV: 666 registros de casos de prueba QA", "Clave de union: tipo_id + num_id"] },
+    { "dot": "rose",    "title": "Calidad aplicada",   "items": ["Normalizacion: strip, remove comillas, guiones, espacios", "Deduplicacion por clave compuesta tipo_id + num_id", "Filtro: tipo e ID deben ser numericos"] },
+    { "dot": "emerald", "title": "Resultados criticos", "items": ["662 coincidencias — cobertura 99.4%", "Tipo 13 PPT: solo 50% de cobertura — GAP CRITICO", "4 IDs solo en CSV, 35 solo en ODS"] }
+  ]
+}
