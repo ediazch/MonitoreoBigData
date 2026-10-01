@@ -1,21 +1,30 @@
 """
 limpieza.py
 -----------
-Funciones de limpieza y lectura de datos para el proyecto MonitoreoBigData.
+Funciones de lectura y limpieza de datos para el proyecto MonitoreoBigData.
 Usa solo librerias de la stdlib de Python (zipfile, xml, csv).
 """
 
 import csv
+import re
 import zipfile
 import xml.etree.ElementTree as ET
+from decimal import Decimal, InvalidOperation
 from typing import Any
 
 
 # ---------------------------------------------------------------------------
 # Constantes de namespaces ODS (formato OpenDocument Spreadsheet)
 # ---------------------------------------------------------------------------
-NS_TABLE = "urn:oasis:names:tc:opendocument:xmlns:table:1.0"
-NS_TEXT  = "urn:oasis:names:tc:opendocument:xmlns:text:1.0"
+NS_TABLE  = "urn:oasis:names:tc:opendocument:xmlns:table:1.0"
+NS_TEXT   = "urn:oasis:names:tc:opendocument:xmlns:text:1.0"
+NS_OFFICE = "urn:oasis:names:tc:opendocument:xmlns:office:1.0"
+
+# Limites defensivos contra archivos ODS malformados o maliciosos
+_MAX_BYTES_XML = 200 * 1024 * 1024
+_MAX_REPETICION_FILA = 1000
+_MAX_REPETICION_COLUMNA = 64
+_PATRON_CIENTIFICA = re.compile(r"^\d+(?:[.,]\d+)?[eE][+-]?\d+$")
 
 
 # ---------------------------------------------------------------------------
@@ -34,19 +43,111 @@ def leer_csv(ruta: str, encoding: str = "utf-8-sig") -> list[list[str]]:
     Returns:
         Lista de listas con los valores de cada fila.
     """
+    return [celdas for _, celdas in leer_csv_con_fila(ruta, encoding)]
+
+
+def leer_csv_con_fila(ruta: str, encoding: str = "utf-8-sig") -> list[tuple[int, list[str]]]:
+    """
+    Igual que leer_csv, pero conserva el numero de fila original (base 1)
+    para poder trazar cada registro hasta el archivo fuente.
+    """
     filas = []
     with open(ruta, encoding=encoding, errors="replace", newline="") as f:
-        reader = csv.reader(f)
-        for fila in reader:
+        for numero, fila in enumerate(csv.reader(f), start=1):
             if any(celda.strip() for celda in fila):
-                filas.append(fila)
+                filas.append((numero, fila))
     return filas
+
+
+def _cargar_content_xml(ruta: str) -> ET.Element:
+    """
+    Abre el ODS (ZIP) y parsea content.xml con salvaguardas:
+    tamano maximo y rechazo de declaraciones DTD/ENTITY (XXE, billion laughs).
+    """
+    with zipfile.ZipFile(ruta, "r") as z:
+        if z.getinfo("content.xml").file_size > _MAX_BYTES_XML:
+            raise ValueError("content.xml excede el tamano maximo permitido")
+        datos = z.read("content.xml")
+    if re.search(rb"<!(DOCTYPE|ENTITY)", datos, re.IGNORECASE):
+        raise ValueError("El ODS contiene declaraciones DTD/ENTITY no permitidas")
+    return ET.fromstring(datos)
+
+
+def _valor_celda(celda: Any) -> tuple[str, str | None]:
+    """
+    Retorna (texto, nota). Si el texto visible esta en notacion cientifica
+    (p. ej. 1,23E+09) recupera el valor exacto almacenado en office:value.
+    """
+    texto = _extraer_texto_celda(celda)
+    if (
+        _PATRON_CIENTIFICA.match(texto)
+        and celda.get(f"{{{NS_OFFICE}}}value-type") == "float"
+    ):
+        crudo = celda.get(f"{{{NS_OFFICE}}}value")
+        if crudo is not None:
+            try:
+                valor = Decimal(crudo)
+                if valor == valor.to_integral_value():
+                    return str(int(valor)), "notacion_cientifica_recuperada"
+            except InvalidOperation:
+                pass
+    return texto, None
+
+
+def leer_ods_detallado(ruta: str) -> list[dict]:
+    """
+    Lee un ODS sin dependencias externas y conserva la trazabilidad.
+
+    Expande filas/columnas repetidas (number-rows/columns-repeated) y numera
+    las filas tal como aparecen en la hoja de calculo.
+
+    Returns:
+        Lista de { 'hoja': str, 'fila': int, 'celdas': list[str], 'notas': list[str] }
+        Solo incluye filas con algun valor.
+    """
+    root = _cargar_content_xml(ruta)
+    resultado = []
+
+    for hoja in root.iter(f"{{{NS_TABLE}}}table"):
+        nombre_hoja = hoja.get(f"{{{NS_TABLE}}}name", "")
+        fila_actual = 0
+
+        for fila in hoja.iter(f"{{{NS_TABLE}}}table-row"):
+            repeticion = int(fila.get(f"{{{NS_TABLE}}}number-rows-repeated", "1"))
+            primera = fila_actual + 1
+            fila_actual += repeticion
+
+            celdas: list[str] = []
+            notas: list[str] = []
+            for celda in fila.findall(f"{{{NS_TABLE}}}table-cell"):
+                texto, nota = _valor_celda(celda)
+                if nota:
+                    notas.append(nota)
+                veces = min(
+                    int(celda.get(f"{{{NS_TABLE}}}number-columns-repeated", "1")),
+                    _MAX_REPETICION_COLUMNA,
+                )
+                celdas.extend([texto] * veces)
+
+            while celdas and not celdas[-1].strip():
+                celdas.pop()
+            if not any(c.strip() for c in celdas):
+                continue
+
+            for k in range(min(repeticion, _MAX_REPETICION_FILA)):
+                resultado.append({
+                    "hoja": nombre_hoja,
+                    "fila": primera + k,
+                    "celdas": list(celdas),
+                    "notas": list(notas),
+                })
+
+    return resultado
 
 
 def leer_ods(ruta: str) -> dict[str, list[list[str]]]:
     """
     Lee un archivo ODS (OpenDocument Spreadsheet) sin dependencias externas.
-    Internamente un ODS es un ZIP que contiene content.xml.
 
     Args:
         ruta: Ruta absoluta al archivo ODS.
@@ -54,24 +155,9 @@ def leer_ods(ruta: str) -> dict[str, list[list[str]]]:
     Returns:
         Diccionario { nombre_hoja: [[celda, celda, ...], ...] }
     """
-    with zipfile.ZipFile(ruta, "r") as z:
-        content_xml = z.read("content.xml").decode("utf-8")
-
-    root = ET.fromstring(content_xml)
-    hojas = {}
-
-    for sheet in root.findall(f".//{{{NS_TABLE}}}table"):
-        nombre_hoja = sheet.get(f"{{{NS_TABLE}}}name", "")
-        filas_hoja  = []
-
-        for row in sheet.findall(f".//{{{NS_TABLE}}}table-row"):
-            celdas = row.findall(f".//{{{NS_TABLE}}}table-cell")
-            valores = [_extraer_texto_celda(c) for c in celdas]
-            if any(v.strip() for v in valores):
-                filas_hoja.append(valores)
-
-        hojas[nombre_hoja] = filas_hoja
-
+    hojas: dict[str, list[list[str]]] = {}
+    for registro in leer_ods_detallado(ruta):
+        hojas.setdefault(registro["hoja"], []).append(registro["celdas"])
     return hojas
 
 
@@ -89,7 +175,7 @@ def limpiar_id(valor: str) -> str:
     """
     Normaliza un numero de identificacion:
     - Elimina espacios, comillas simples/dobles, guiones.
-    - Retorna string limpio en minusculas para comparacion uniforme.
+    - Retorna string limpio para comparacion uniforme.
     """
     return valor.strip().replace("'", "").replace('"', "").replace("-", "").replace(" ", "")
 
@@ -157,7 +243,7 @@ def eliminar_duplicados(registros: list[dict], clave: tuple[str, ...] = ("tipo_i
         clave:     Campos que forman la clave unica.
 
     Returns:
-        Lista sin duplicados manteniendo el primer occurrence.
+        Lista sin duplicados manteniendo la primera ocurrencia.
     """
     vistos   = set()
     limpios  = []

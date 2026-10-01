@@ -1,0 +1,3 @@
+# Copiar a config/rutas_locales.yaml y completar. Ese archivo esta en .gitignore.
+ods: "C:/ruta/al/archivo_estimador.ods"
+csv: "C:/ruta/al/archivo_pruebas_qa.csv"

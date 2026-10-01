@@ -2,7 +2,7 @@
 transformacion.py
 -----------------
 Funciones de analisis y cruce de datos entre el ODS (estimador de ingresos)
-y el CSV (casos de prueba QA del Adviser).
+y el CSV (casos de prueba QA).
 
 Relacion clave:
     CSV.columna_0  (tipo_id)  <-->  prefijo numerico del nombre de hoja ODS

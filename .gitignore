@@ -11,4 +11,9 @@ graphify-out/graph.json
 graphify-out/.graphify_analysis.json
 graphify-out/.graphify_labels.json*
 
-data/processed/*.xlsx
+data/processed/*
+!data/processed/.gitkeep
+
+config/rutas_locales.yaml
+data/raw/*
+!data/raw/.gitkeep

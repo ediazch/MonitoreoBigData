@@ -2,7 +2,7 @@
 analisis_relacion.py
 --------------------
 Script principal: cruza los datos del ODS (Income Estimator) contra
-el CSV (casos de prueba QA Adviser) e imprime por consola todos los
+el CSV (casos de prueba QA) e imprime por consola todos los
 resultados del analisis de relacion.
 
 Uso:
@@ -11,7 +11,6 @@ Uso:
 
 import sys
 import os
-import yaml
 
 # Agregar src al path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src"))
@@ -24,35 +23,13 @@ from limpieza import (
     eliminar_duplicados,
 )
 from transformacion import cruzar_datos, calcular_estadisticas, TIPOS_DOCUMENTO
-from exportacion import exportar_excel
+from configuracion import cargar_rutas
 
 # ---------------------------------------------------------------------------
-# Configuracion de rutas — leidas desde configuracion.yaml (SEC-001 fix)
-# Las rutas absolutas se definen en config, no en el codigo
+# Rutas de entrada: variables de entorno o config/rutas_locales.yaml (src/configuracion.py)
 # ---------------------------------------------------------------------------
-_CONFIG_PATH = os.path.join(os.path.dirname(__file__), "config", "configuracion.yaml")
-
-def _cargar_rutas() -> tuple[str, str]:
-    """Lee las rutas desde configuracion.yaml. Fallback a variables de entorno."""
-    # Prioridad 1: variables de entorno (mas seguro para CI/CD)
-    ruta_ods = os.environ.get("MONITOREO_RUTA_ODS")
-    ruta_csv = os.environ.get("MONITOREO_RUTA_CSV")
-    if ruta_ods and ruta_csv:
-        return ruta_ods, ruta_csv
-    # Prioridad 2: configuracion.yaml
-    try:
-        with open(_CONFIG_PATH, encoding="utf-8") as f:
-            cfg = yaml.safe_load(f)
-        rutas = cfg.get("rutas", {}).get("datos_externos", {})
-        return rutas.get("ods", ""), rutas.get("csv", "")
-    except (FileNotFoundError, KeyError, TypeError) as e:
-        raise RuntimeError(
-            f"No se encontraron rutas en config/configuracion.yaml ni en variables de entorno.\n"
-            f"Define MONITOREO_RUTA_ODS y MONITOREO_RUTA_CSV o configura rutas.datos_externos en el YAML.\n"
-            f"Error: {e}"
-        )
-
-RUTA_ODS, RUTA_CSV = _cargar_rutas()
+_RUTAS = cargar_rutas()
+RUTA_ODS, RUTA_CSV = _RUTAS["ods"], _RUTAS["csv"]
 
 
 def _enmascarar_id(num_id: str) -> str:
@@ -143,12 +120,12 @@ def main() -> None:
 
     # -- Estadisticas globales -----------------------------------------------
     titulo("ESTADISTICAS GLOBALES")
-    print(f"  Total registros CSV (QA Adviser)   : {stats['total_registros_csv']}")
+    print(f"  Total registros CSV (QA)           : {stats['total_registros_csv']}")
     print(f"  Total registros ODS (Estimador)    : {stats['total_registros_ods']}")
     print(f"  Universo total de IDs              : {stats['total_universo']}")
     print()
     print(f"  [COINCIDENCIAS]   IDs en AMBOS archivos : {stats['coincidencias']}")
-    print(f"  [SOLO EN CSV]     IDs solo en QA Adviser: {stats['solo_en_csv']}")
+    print(f"  [SOLO EN CSV]     IDs solo en QA        : {stats['solo_en_csv']}")
     print(f"  [SOLO EN ODS]     IDs solo en Estimador : {stats['solo_en_ods']}")
     print()
     print(f"  Cobertura CSV sobre ODS : {stats['cobertura_csv_pct']}%")
@@ -180,7 +157,7 @@ def main() -> None:
     imprimir_tabla(coincidencias_mask, campos=["tipo_id", "descripcion", "num_id", "hoja_ods"], max_filas=30)
 
     # -- Solo en CSV ----------------------------------------------------------
-    seccion(f"SOLO EN CSV (QA Adviser) — {len(resultado['solo_en_csv'])} registros NO encontrados en el Estimador")
+    seccion(f"SOLO EN CSV (QA) — {len(resultado['solo_en_csv'])} registros NO encontrados en el Estimador")
     solo_csv_mask = [
         {**r, "num_id": _enmascarar_id(r["num_id"])}
         for r in resultado["solo_en_csv"]
@@ -213,7 +190,7 @@ def main() -> None:
     print("""
   ESTRUCTURA DE LA RELACION:
   --------------------------
-  El archivo CSV (QA Adviser) contiene pares (tipo_documento, num_id) que
+  El archivo CSV (QA) contiene pares (tipo_documento, num_id) que
   representan los identificadores de personas evaluadas en pruebas del sistema.
 
   El archivo ODS (Income Estimator) organiza esos mismos identificadores
@@ -234,10 +211,7 @@ def main() -> None:
     """)
 
     print(f"\n{SEP_DOBLE}")
-    if "--excel" in sys.argv:
-        salida = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "processed")
-        ruta_excel = exportar_excel(resultado, stats, salida)
-        print(f"  Excel generado: {ruta_excel}")
+    print("  Informe Excel gerencial y tecnico: python generar_informe.py")
 
     print("  Analisis finalizado.")
     print(SEP_DOBLE)

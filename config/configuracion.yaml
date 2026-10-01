@@ -35,3 +35,16 @@ csv:
 analisis:
   col_tipo_id_ods: 0
   col_num_id_ods: 1
+
+# Umbrales de semaforo (porcentajes). Son propuestas: validar con el POM.
+#   VERDE >= verde | AMARILLO >= amarillo | ROJO < amarillo
+umbrales:
+  cobertura_qa:
+    verde: 90
+    amarillo: 70
+  trazabilidad:
+    verde: 99
+    amarillo: 95
+  calidad_ods:
+    verde: 95
+    amarillo: 85
