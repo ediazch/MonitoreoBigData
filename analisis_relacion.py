@@ -24,6 +24,7 @@ from limpieza import (
     eliminar_duplicados,
 )
 from transformacion import cruzar_datos, calcular_estadisticas, TIPOS_DOCUMENTO
+from exportacion import exportar_excel
 
 # ---------------------------------------------------------------------------
 # Configuracion de rutas — leidas desde configuracion.yaml (SEC-001 fix)
@@ -233,6 +234,11 @@ def main() -> None:
     """)
 
     print(f"\n{SEP_DOBLE}")
+    if "--excel" in sys.argv:
+        salida = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "processed")
+        ruta_excel = exportar_excel(resultado, stats, salida)
+        print(f"  Excel generado: {ruta_excel}")
+
     print("  Analisis finalizado.")
     print(SEP_DOBLE)
 

@@ -10,3 +10,5 @@ graphify-out/graph.html
 graphify-out/graph.json
 graphify-out/.graphify_analysis.json
 graphify-out/.graphify_labels.json*
+
+data/processed/*.xlsx
